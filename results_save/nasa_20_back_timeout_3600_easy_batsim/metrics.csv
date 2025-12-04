@@ -1,0 +1,2 @@
+,objective,consumed_joules,mean_slowdown,time_idle,time_computing,time_switching_off,time_switching_on,time_sleeping,count_switching_off,count_switching_on,energy_waste,mean_waiting_time,elapsed_time,execution_time,max_waiting_time,mean_turnaround_time
+0,13.63935400067878,26878828602.0,26.686176948123478,41935640,81734254,8908200,13016700,93156438,4949,4949,10510912400.0,812.5813503043719,57.0399603843689,1865244,11258.0,1600.099889319314

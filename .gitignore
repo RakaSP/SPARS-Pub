@@ -2,8 +2,6 @@ mynote.md
 prompt.md
 myenv
 requirements_linux.txt
-*:Zone.Identifier
-results_save/
 multi_runner.py
 plotter.py
 simulator.log

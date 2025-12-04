@@ -1,0 +1,2 @@
+total_waiting_time,mean_waiting_time,total_energy_waste,total_energy_consumption,energy_effective,total_active_idle,total_active_compute,total_switching_off,total_switching_on,total_sleeping,total_time_all_states
+3660530.0,1012.8749308245712,7540482590.0,24021251043.0,16480768453.0,21911201.0,81734254.0,11487600.0,17231400.0,105695577.0,238060032.0
