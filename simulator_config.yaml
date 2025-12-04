@@ -1,0 +1,41 @@
+paths:
+  workload: "workloads/nasa-20-back.json"
+  platform: "platforms/platform-nasa-128.json"
+  output: "results_test"
+
+run:
+  algorithm: "easy_psas"
+  overrun_policy: "terminate"
+  timeout: null # Num (Int) or Null
+  # can be integer epoch, "now", or "YYYY-MM-DD HH:MM:SS"
+  start_time: 0
+
+rl:
+  enabled: true
+  learn: true
+  type: "discrete" # "discrete" | "continuous"
+  dt: 1800 # required when type == "discrete"
+  device: "cuda" # "cpu" | "cuda" | "auto" (explicit "auto" resolves to cuda if available)
+  epochs: 1
+  num_nodes: 128
+  checkpoint: null
+
+  agents:
+    spars:
+      class: "RL_Agent.SPARS.agent:ActorCritic"
+      params:
+        obs_dim: 6
+        device: "cuda"
+      optimizer:
+        class: "torch.optim:Adam"
+        params:
+          lr: 0.0003
+
+    import: import
+
+  # Single-agent assignment — set to "thomas" or "spars"
+  assign: "spars"
+
+logging:
+  level: "TRACE"
+  file: "results/simulation.log"

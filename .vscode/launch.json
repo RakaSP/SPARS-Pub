@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python Debugger: Run debug.py",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/debug.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Python Debugger: Run debug2.py",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/debug2.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Python Debugger: Run debug_copy.py",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/debug_copy.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
+    }
+  ]
+}
