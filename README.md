@@ -1,6 +1,6 @@
-# HPCv3 Simulator 🖥️⚡
+# SPARS Simulator 🖥️⚡
 
-HPCv3 is a lightweight simulator for studying **job scheduling** and **resource allocation** in High-Performance Computing (HPC) systems.  
+SPARS is a lightweight simulator for studying **job scheduling** and **resource allocation** in High-Performance Computing (HPC) systems.  
 It allows you to **generate workloads**, **define platforms**, **convert swf formats to JSON**, **run scheduling simulations** with different algorithms, and **visualize results**.
 
 ## 📥 Installation
@@ -13,8 +13,8 @@ It allows you to **generate workloads**, **define platforms**, **convert swf for
 ### Clone and Setup Environment
 
 ```bash
-git clone https://github.com/algoritmakomputasi-ugm/HPCv3-AIBT-2025.git
-cd HPCv3-AIBT-2025
+git clone https://github.com/RakaSP/SPARS-Pub.git
+cd SPARS-Pub
 python setup.py
 ```
 
@@ -32,7 +32,7 @@ Each stage is provided as a Jupyter Notebook for ease of experimentation.
 
 ## 📂 Workload Generation
 
-Notebook: `workloads_generator.ipynb`
+Notebook: `WorkloadGenerator.ipynb`
 
 This stage generates job traces that describe:
 
@@ -46,7 +46,7 @@ The output is stored as a .json or .csv file, which will be used as input for th
 
 ## 🏗️ Platform Generation
 
-Notebook: `platforms_generator.ipynb`
+Notebook: `PlatformGenerator.ipynb`
 
 This stage defines the HPC platform, including:
 
@@ -57,13 +57,7 @@ This stage defines the HPC platform, including:
 
 ## 💻 Scheduling Simulation
 
-Notebook: `SPARS_runner.ipynb`
-
-Here you run the simulation by combining:
-
-- A workload file (jobs to run)
-- A platform file (system configuration)
-- A scheduler of your choice
+Notebook: `Runner.ipynb`
 
 Available schedulers:
 
@@ -88,14 +82,10 @@ These visualizations help you evaluate the effectiveness of different scheduling
 
 ## 🚀 Example End-to-End Run
 
-1. Generate a workload → `workloads_generator.ipynb`
-2. Generate a platform → `platforms_generator.ipynb`
-3. Run simulation → `HPCv3_runner.ipynb`
+1. Generate a workload → `WorkloadGenerator.ipynb`
+2. Generate a platform → `PlatformGenerator.ipynb`
+3. Run simulation → `Runner.ipynb`
 4. Visualize results → `create_ganttchart.ipynb`
-
-## Additional SWF to JSON converter
-
-The notebook `swf_to_json.ipynb` lets you convert SWF format files into JSON files.
 
 ## 📝 License
 
