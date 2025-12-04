@@ -1,0 +1,60 @@
+{
+    "nb_res": 128,
+    "jobs": [
+        {
+            "id": 1,
+            "res": 64,
+            "subtime": 0,
+            "walltime": 1800,
+            "profile": "100",
+            "user_id": 0
+        },
+        {
+            "id": 2,
+            "res": 64,
+            "subtime": 0,
+            "walltime": 1800,
+            "profile": "100",
+            "user_id": 0
+        },
+		{
+            "id": 3,
+            "res": 64,
+            "subtime": 6300,
+            "walltime": 1800,
+            "profile": "100",
+            "user_id": 0
+        },
+        {
+            "id": 4,
+            "res": 64,
+            "subtime": 6300,
+            "walltime": 1800,
+            "profile": "100",
+            "user_id": 0
+        },
+		{
+            "id": 5,
+            "res": 64,
+            "subtime": 14400,
+            "walltime": 1800,
+            "profile": "100",
+            "user_id": 0
+        },
+        {
+            "id": 6,
+            "res": 64,
+            "subtime": 14400,
+            "walltime": 1800,
+            "profile": "100",
+            "user_id": 0
+        }
+    ],
+    "profiles": {
+        "100": {
+            "cpu": 100000000,
+            "com": 0,
+            "type": "parallel_homogeneous"
+        }
+    }
+}

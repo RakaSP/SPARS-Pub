@@ -1,0 +1,2176 @@
+{
+    "machines": [
+        {
+            "id": 0,
+            "dvfs_profiles": {
+                "underclock_1": {
+                    "power": 144.70636930180183,
+                    "compute_speed": 0.7616124700094832
+                },
+                "base": {
+                    "power": 206.72338471685975,
+                    "compute_speed": 1.0880178142992618
+                },
+                "overclock_1": {
+                    "power": 268.7404001319177,
+                    "compute_speed": 1.4144231585890403
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9.792160328693356,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 206.72338471685975,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9.792160328693356,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1,
+            "dvfs_profiles": {
+                "underclock": {
+                    "power": 149.94312608752273,
+                    "compute_speed": 0.789174347829067
+                },
+                "base": {
+                    "power": 187.4289076094034,
+                    "compute_speed": 0.9864679347863338
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 8.878211413077004,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 187.4289076094034,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 8.878211413077004,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 2,
+            "dvfs_profiles": {
+                "underclock_1": {
+                    "power": 113.1878514872519,
+                    "compute_speed": 0.5957255341434311
+                },
+                "base": {
+                    "power": 161.69693069607416,
+                    "compute_speed": 0.8510364773477588
+                },
+                "overclock_1": {
+                    "power": 210.2060099048964,
+                    "compute_speed": 1.1063474205520865
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 7.659328296129829,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 161.69693069607416,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 7.659328296129829,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 3,
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power": 104.40970453420617,
+                    "compute_speed": 0.5495247607063483
+                },
+                "underclock_1": {
+                    "power": 156.61455680130925,
+                    "compute_speed": 0.8242871410595224
+                },
+                "base": {
+                    "power": 208.81940906841234,
+                    "compute_speed": 1.0990495214126965
+                },
+                "overclock_1": {
+                    "power": 261.0242613355154,
+                    "compute_speed": 1.3738119017658708
+                },
+                "overclock_2": {
+                    "power": 313.2291136026185,
+                    "compute_speed": 1.538669329977775
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9.891445692714269,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 208.81940906841234,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9.891445692714269,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 4,
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power": 89.72387144215925,
+                    "compute_speed": 0.4722309023271539
+                },
+                "underclock_1": {
+                    "power": 134.58580716323888,
+                    "compute_speed": 0.7083463534907308
+                },
+                "base": {
+                    "power": 179.4477428843185,
+                    "compute_speed": 0.9444618046543078
+                },
+                "overclock_1": {
+                    "power": 224.30967860539812,
+                    "compute_speed": 1.1805772558178849
+                },
+                "overclock_2": {
+                    "power": 269.17161432647777,
+                    "compute_speed": 1.3222465265160308
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 8.50015624188877,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 179.4477428843185,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 8.50015624188877,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 5,
+            "dvfs_profiles": {
+                "underclock_1": {
+                    "power": 131.7124598534476,
+                    "compute_speed": 0.6932234729128821
+                },
+                "base": {
+                    "power": 188.16065693349657,
+                    "compute_speed": 0.990319247018403
+                },
+                "overclock_1": {
+                    "power": 244.60885401354554,
+                    "compute_speed": 1.287415021123924
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 8.912873223165628,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 188.16065693349657,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 8.912873223165628,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 6,
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power": 92.57336242120952,
+                    "compute_speed": 0.4872282232695238
+                },
+                "underclock_1": {
+                    "power": 138.86004363181428,
+                    "compute_speed": 0.7308423349042857
+                },
+                "base": {
+                    "power": 185.14672484241905,
+                    "compute_speed": 0.9744564465390476
+                },
+                "overclock_1": {
+                    "power": 231.43340605302382,
+                    "compute_speed": 1.2180705581738096
+                },
+                "overclock_2": {
+                    "power": 277.72008726362856,
+                    "compute_speed": 1.3642390251546666
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 8.77010801885143,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 185.14672484241905,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 8.77010801885143,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 7,
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power": 93.30032792420943,
+                    "compute_speed": 0.4910543574958391
+                },
+                "underclock_1": {
+                    "power": 139.95049188631413,
+                    "compute_speed": 0.7365815362437587
+                },
+                "base": {
+                    "power": 186.60065584841885,
+                    "compute_speed": 0.9821087149916782
+                },
+                "overclock_1": {
+                    "power": 233.25081981052358,
+                    "compute_speed": 1.2276358937395977
+                },
+                "overclock_2": {
+                    "power": 279.90098377262825,
+                    "compute_speed": 1.3749522009883495
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 8.838978434925103,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 186.60065584841885,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 8.838978434925103,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 8,
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power": 102.10446510022214,
+                    "compute_speed": 0.5373919215801165
+                },
+                "underclock_1": {
+                    "power": 153.15669765033323,
+                    "compute_speed": 0.8060878823701747
+                },
+                "base": {
+                    "power": 204.20893020044429,
+                    "compute_speed": 1.074783843160233
+                },
+                "overclock_1": {
+                    "power": 255.26116275055534,
+                    "compute_speed": 1.3434798039502913
+                },
+                "overclock_2": {
+                    "power": 306.31339530066646,
+                    "compute_speed": 1.5046973804243262
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9.673054588442097,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 204.20893020044429,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9.673054588442097,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 9,
+            "dvfs_profiles": {
+                "underclock_1": {
+                    "power": 116.86484116081157,
+                    "compute_speed": 0.6150781113726924
+                },
+                "base": {
+                    "power": 166.94977308687368,
+                    "compute_speed": 0.8786830162467035
+                },
+                "overclock_1": {
+                    "power": 217.03470501293577,
+                    "compute_speed": 1.1422879211207146
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 7.908147146220331,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 166.94977308687368,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 7.908147146220331,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 10,
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power": 105.08240395892818,
+                    "compute_speed": 0.5530652839943588
+                },
+                "underclock_1": {
+                    "power": 157.62360593839227,
+                    "compute_speed": 0.8295979259915383
+                },
+                "base": {
+                    "power": 210.16480791785636,
+                    "compute_speed": 1.1061305679887177
+                },
+                "overclock_1": {
+                    "power": 262.7060098973204,
+                    "compute_speed": 1.382663209985897
+                },
+                "overclock_2": {
+                    "power": 315.24721187678455,
+                    "compute_speed": 1.5485827951842046
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9.955175111898459,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 210.16480791785636,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9.955175111898459,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 11,
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power": 93.1992213412745,
+                    "compute_speed": 0.49052221758565523
+                },
+                "underclock_1": {
+                    "power": 139.79883201191174,
+                    "compute_speed": 0.7357833263784829
+                },
+                "base": {
+                    "power": 186.398442682549,
+                    "compute_speed": 0.9810444351713105
+                },
+                "overclock_1": {
+                    "power": 232.99805335318624,
+                    "compute_speed": 1.2263055439641382
+                },
+                "overclock_2": {
+                    "power": 279.5976640238235,
+                    "compute_speed": 1.3734622092398345
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 8.829399916541794,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 186.398442682549,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 8.829399916541794,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 12,
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power": 98.38386584064646,
+                    "compute_speed": 0.5178098202139287
+                },
+                "underclock_1": {
+                    "power": 147.5757987609697,
+                    "compute_speed": 0.7767147303208931
+                },
+                "base": {
+                    "power": 196.76773168129293,
+                    "compute_speed": 1.0356196404278575
+                },
+                "overclock_1": {
+                    "power": 245.95966460161617,
+                    "compute_speed": 1.2945245505348217
+                },
+                "overclock_2": {
+                    "power": 295.1515975219394,
+                    "compute_speed": 1.4498674965990004
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9.320576763850717,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 196.76773168129293,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9.320576763850717,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 13,
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power": 103.22960172379051,
+                    "compute_speed": 0.543313693283108
+                },
+                "underclock_1": {
+                    "power": 154.84440258568577,
+                    "compute_speed": 0.814970539924662
+                },
+                "base": {
+                    "power": 206.45920344758102,
+                    "compute_speed": 1.086627386566216
+                },
+                "overclock_1": {
+                    "power": 258.07400430947627,
+                    "compute_speed": 1.3582842332077698
+                },
+                "overclock_2": {
+                    "power": 309.68880517137154,
+                    "compute_speed": 1.5212783411927022
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9.779646479095943,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 206.45920344758102,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9.779646479095943,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 14,
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power": 98.61153543304219,
+                    "compute_speed": 0.5190080812265379
+                },
+                "underclock_1": {
+                    "power": 147.91730314956328,
+                    "compute_speed": 0.7785121218398068
+                },
+                "base": {
+                    "power": 197.22307086608438,
+                    "compute_speed": 1.0380161624530757
+                },
+                "overclock_1": {
+                    "power": 246.5288385826055,
+                    "compute_speed": 1.2975202030663446
+                },
+                "overclock_2": {
+                    "power": 295.83460629912656,
+                    "compute_speed": 1.4532226274343059
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9.342145462077681,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 197.22307086608438,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9.342145462077681,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 15,
+            "dvfs_profiles": {
+                "underclock": {
+                    "power": 172.64610098357613,
+                    "compute_speed": 0.9086636893872427
+                },
+                "base": {
+                    "power": 215.80762622947015,
+                    "compute_speed": 1.1358296117340534
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 10.22246650560648,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 215.80762622947015,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 10.22246650560648,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 16,
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power": 105.16627416494464,
+                    "compute_speed": 0.5535067061312876
+                },
+                "underclock_1": {
+                    "power": 157.74941124741696,
+                    "compute_speed": 0.8302600591969314
+                },
+                "base": {
+                    "power": 210.33254832988928,
+                    "compute_speed": 1.1070134122625752
+                },
+                "overclock_1": {
+                    "power": 262.9156854123616,
+                    "compute_speed": 1.383766765328219
+                },
+                "overclock_2": {
+                    "power": 315.4988224948339,
+                    "compute_speed": 1.5498187771676053
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9.963120710363176,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 210.33254832988928,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9.963120710363176,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 17,
+            "dvfs_profiles": {
+                "underclock_1": {
+                    "power": 114.48484815138228,
+                    "compute_speed": 0.6025518323756961
+                },
+                "base": {
+                    "power": 163.54978307340326,
+                    "compute_speed": 0.8607883319652803
+                },
+                "overclock_1": {
+                    "power": 212.61471799542426,
+                    "compute_speed": 1.1190248315548643
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 7.747094987687523,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 163.54978307340326,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 7.747094987687523,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 18,
+            "dvfs_profiles": {
+                "underclock": {
+                    "power": 172.1141515075583,
+                    "compute_speed": 0.9058639553029384
+                },
+                "base": {
+                    "power": 215.14268938444786,
+                    "compute_speed": 1.132329944128673
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 10.190969497158056,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 215.14268938444786,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 10.190969497158056,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 19,
+            "dvfs_profiles": {
+                "underclock_1": {
+                    "power": 123.23671139808343,
+                    "compute_speed": 0.6486142705162286
+                },
+                "base": {
+                    "power": 176.0524448544049,
+                    "compute_speed": 0.9265918150231838
+                },
+                "overclock_1": {
+                    "power": 228.8681783107264,
+                    "compute_speed": 1.204569359530139
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 8.339326335208654,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 176.0524448544049,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 8.339326335208654,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 20,
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power": 107.05739040394465,
+                    "compute_speed": 0.5634599494944456
+                },
+                "underclock_1": {
+                    "power": 160.586085605917,
+                    "compute_speed": 0.8451899242416683
+                },
+                "base": {
+                    "power": 214.1147808078893,
+                    "compute_speed": 1.1269198989888911
+                },
+                "overclock_1": {
+                    "power": 267.6434760098616,
+                    "compute_speed": 1.408649873736114
+                },
+                "overclock_2": {
+                    "power": 321.172171211834,
+                    "compute_speed": 1.5776878585844474
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 10.14227909090002,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 214.1147808078893,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 10.14227909090002,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 21,
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power": 93.09832846302069,
+                    "compute_speed": 0.489991202436951
+                },
+                "underclock_1": {
+                    "power": 139.64749269453102,
+                    "compute_speed": 0.7349868036554265
+                },
+                "base": {
+                    "power": 186.19665692604138,
+                    "compute_speed": 0.979982404873902
+                },
+                "overclock_1": {
+                    "power": 232.74582115755175,
+                    "compute_speed": 1.2249780060923774
+                },
+                "overclock_2": {
+                    "power": 279.29498538906205,
+                    "compute_speed": 1.3719753668234627
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 8.819841643865118,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 186.19665692604138,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 8.819841643865118,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 22,
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power": 86.09166747961358,
+                    "compute_speed": 0.4531140393663872
+                },
+                "underclock_1": {
+                    "power": 129.13750121942036,
+                    "compute_speed": 0.6796710590495808
+                },
+                "base": {
+                    "power": 172.18333495922715,
+                    "compute_speed": 0.9062280787327744
+                },
+                "overclock_1": {
+                    "power": 215.22916869903395,
+                    "compute_speed": 1.132785098415968
+                },
+                "overclock_2": {
+                    "power": 258.2750024388407,
+                    "compute_speed": 1.2687193102258842
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 8.15605270859497,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 172.18333495922715,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 8.15605270859497,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 23,
+            "dvfs_profiles": {
+                "underclock_1": {
+                    "power": 126.44822904223899,
+                    "compute_speed": 0.6655169949591526
+                },
+                "base": {
+                    "power": 180.64032720319858,
+                    "compute_speed": 0.9507385642273609
+                },
+                "overclock_1": {
+                    "power": 234.83242536415815,
+                    "compute_speed": 1.2359601334955692
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 8.556647078046248,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 180.64032720319858,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 8.556647078046248,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 24,
+            "dvfs_profiles": {
+                "underclock_1": {
+                    "power": 119.7191274064124,
+                    "compute_speed": 0.6301006705600654
+                },
+                "base": {
+                    "power": 171.02732486630345,
+                    "compute_speed": 0.9001438150858077
+                },
+                "overclock_1": {
+                    "power": 222.33552232619448,
+                    "compute_speed": 1.17018695961155
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 8.10129433577227,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 171.02732486630345,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 8.10129433577227,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 25,
+            "dvfs_profiles": {
+                "underclock_1": {
+                    "power": 142.9936409156506,
+                    "compute_speed": 0.7525981100823715
+                },
+                "base": {
+                    "power": 204.27662987950086,
+                    "compute_speed": 1.0751401572605308
+                },
+                "overclock_1": {
+                    "power": 265.55961884335113,
+                    "compute_speed": 1.39768220443869
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9.676261415344777,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 204.27662987950086,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9.676261415344777,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 26,
+            "dvfs_profiles": {
+                "underclock_1": {
+                    "power": 137.0771145625781,
+                    "compute_speed": 0.7214584976977794
+                },
+                "base": {
+                    "power": 195.82444937511156,
+                    "compute_speed": 1.0306549967111134
+                },
+                "overclock_1": {
+                    "power": 254.57178418764502,
+                    "compute_speed": 1.3398514957244474
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9.27589497040002,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 195.82444937511156,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9.27589497040002,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 27,
+            "dvfs_profiles": {
+                "underclock_1": {
+                    "power": 140.20095240713243,
+                    "compute_speed": 0.7378997495112233
+                },
+                "base": {
+                    "power": 200.28707486733205,
+                    "compute_speed": 1.0541424993017476
+                },
+                "overclock_1": {
+                    "power": 260.37319732753167,
+                    "compute_speed": 1.3703852490922719
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9.487282493715728,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 200.28707486733205,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9.487282493715728,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 28,
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power": 88.64214896742412,
+                    "compute_speed": 0.46653762614433747
+                },
+                "underclock_1": {
+                    "power": 132.96322345113617,
+                    "compute_speed": 0.6998064392165062
+                },
+                "base": {
+                    "power": 177.28429793484824,
+                    "compute_speed": 0.9330752522886749
+                },
+                "overclock_1": {
+                    "power": 221.6053724185603,
+                    "compute_speed": 1.1663440653608437
+                },
+                "overclock_2": {
+                    "power": 265.92644690227235,
+                    "compute_speed": 1.3063053532041449
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 8.397677270598074,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 177.28429793484824,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 8.397677270598074,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 29,
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power": 104.54415518124448,
+                    "compute_speed": 0.5502323956907604
+                },
+                "underclock_1": {
+                    "power": 156.8162327718667,
+                    "compute_speed": 0.8253485935361407
+                },
+                "base": {
+                    "power": 209.08831036248895,
+                    "compute_speed": 1.1004647913815209
+                },
+                "overclock_1": {
+                    "power": 261.36038795311117,
+                    "compute_speed": 1.375580989226901
+                },
+                "overclock_2": {
+                    "power": 313.6324655437334,
+                    "compute_speed": 1.5406507079341292
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9.904183122433688,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 209.08831036248895,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9.904183122433688,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 30,
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power": 103.93704469677881,
+                    "compute_speed": 0.5470370773514674
+                },
+                "underclock_1": {
+                    "power": 155.90556704516823,
+                    "compute_speed": 0.8205556160272012
+                },
+                "base": {
+                    "power": 207.87408939355763,
+                    "compute_speed": 1.094074154702935
+                },
+                "overclock_1": {
+                    "power": 259.84261174194705,
+                    "compute_speed": 1.3675926933786686
+                },
+                "overclock_2": {
+                    "power": 311.81113409033645,
+                    "compute_speed": 1.5317038165841088
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9.846667392326413,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 207.87408939355763,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9.846667392326413,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 31,
+            "dvfs_profiles": {
+                "underclock_1": {
+                    "power": 139.18849007715212,
+                    "compute_speed": 0.7325710004060638
+                },
+                "base": {
+                    "power": 198.84070011021734,
+                    "compute_speed": 1.0465300005800913
+                },
+                "overclock_1": {
+                    "power": 258.49291014328253,
+                    "compute_speed": 1.3604890007541186
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9.418770005220821,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 198.84070011021734,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 300
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9.418770005220821,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

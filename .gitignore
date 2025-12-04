@@ -4,9 +4,6 @@ myenv
 requirements_linux.txt
 *:Zone.Identifier
 results_save/
-workloads/
-platforms/
-plots/
 multi_runner.py
 plotter.py
 simulator.log
