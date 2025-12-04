@@ -1,5 +1,4 @@
-# SPARS Simulator 🖥️⚡
-
+# SPARS Simulator 
 SPARS is a lightweight simulator for studying **job scheduling** and **resource allocation** in High-Performance Computing (HPC) systems.  
 It allows you to **generate workloads**, **define platforms**, **run scheduling simulations** with different algorithms, and **visualize results**.
 
