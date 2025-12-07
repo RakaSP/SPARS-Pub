@@ -58,7 +58,7 @@ This stage procedurally builds synthetic HPC job traces used as input to the sim
 ### Result
 
 Given these parameters, the notebook generates a workload description as a JSON file  
-(e.g., `workloads/generated_500_8_ws.json`) that defines the jobs to be scheduled.
+(e.g., `workloads/generated_workload.json`) that defines the jobs to be scheduled.
 
 ### Workload format
 
