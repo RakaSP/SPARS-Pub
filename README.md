@@ -31,38 +31,85 @@ Each stage is provided as a Jupyter Notebook for ease of experimentation.
 
 ## 📂 Workload Generation
 
-Notebook: `WorkloadGenerator.ipynb`
+**Notebook:** `WorkloadGenerator.ipynb`
 
-This stage generates job traces that describe:
+This stage procedurally builds synthetic HPC job traces used as input to the simulator.
 
-- Number of jobs
-- Arrival times
-- Job duration
-- Resource requirements
+### Parameters
 
-You can configure parameters (e.g., inter-arrival rate, job length distribution) to model different HPC workloads.
-The output is stored as a .json or .csv file, which will be used as input for the simulation.
+- Job arrival rate (`lambda_arrival`)  
+  Controls the exponential inter-arrival process for jobs.
+
+- Requested execution time distribution (`mu_execution`, `sigma_execution`)  
+  Mean and standard deviation of the (normal) distribution used to draw requested runtimes.
+
+- Runtime noise (`mu_noise`, `sigma_noise`)  
+  Optional perturbation added to requested runtimes to obtain actual runtimes; can be disabled by setting `runtime_equals_reqtime=True`.
+
+- Workload size (`num_jobs`)  
+  Number of jobs to generate.
+
+- Resource demand (`max_node`)  
+  Maximum number of nodes in the system; also used as an upper bound when sampling job sizes (`res` per job).
+
+- Minimum time unit (`min_time`)  
+  Lower bound enforced on requested/actual runtimes to avoid zero-length jobs.
 
 ## 🏗️ Platform Generation
 
-Notebook: `PlatformGenerator.ipynb`
+**Notebook:** `PlatformGenerator.ipynb`
 
-This stage defines the HPC platform, including:
+This stage procedurally builds the HPC platform model used by the simulator.
 
-- Number of compute nodes
-- Available DVFS (Dynamic Voltage and Frequency Scaling) profiles
-- Power consumption and compute speed
-- The generated platform description file is also saved as .json, providing the environment where jobs will be scheduled.
+### Parameters
+
+- Number of compute nodes (`num_nodes`)
+- Baseline active power and compute speed per node (`base_power`, normalized speed)
+- Power draw in non-active states (`switching_off_power`, `sleeping_power`, `switching_on_power`)
+- State-transition latencies (`switching_off_time`, `switching_on_time`)
+- DVFS configuration patterns (e.g., 2-, 3-, or 5-level DVFS profiles per node)
+
+### Result
+
+Given these parameters, the notebook generates a JSON platform description (e.g., `Generated_16.json`) that defines the environment where jobs are scheduled and energy usage is computed.
+
+### Platform format
+
+The generated JSON file has a single top-level object with a `machines` array.  
+Each element of `machines` is a node entry with the following fields:
+
+- **Node ID** (`id`)  
+  Unique identifier of the machine.
+
+- **DVFS profiles** (`dvfs_profiles`)  
+  Mapping from DVFS modes to pairs of nominal power and normalized compute speed.
+
+- **DVFS mode** (`dvfs_mode`)  
+  Default DVFS profile used by the node (e.g., `"base"`).
+
+- **Power-state model** (`states`)  
+  Set of power states (`active`, `sleeping`, `switching_on`, `switching_off`), where each state defines:
+  - its power/energy consumption rate,
+  - its compute speed (possibly inherited from the DVFS profile), and
+  - allowed transitions to other states with associated transition times, and whether the state can run jobs.
+
+Together, these fields describe the platform on which jobs are executed and power management policies are applied.
+
+### Result
+
+Given these parameters, the notebook generates a workload description as a JSON file  
+(e.g., `workloads/generated_500_8_ws.json`) that defines the jobs to be scheduled.
 
 ## 💻 Scheduling Simulation
 
 Notebook: `Runner.ipynb`
 
-Available schedulers:
+Available schedulers: **FCFS** and **EASY**, with 3 variants:
 
-1. **Easy Backfilling** – Improves utilization by allowing smaller jobs to jump ahead if they don’t delay larger jobs.
-2. **FCFS (First-Come, First-Served)** – Jobs are executed in the order they arrive.
-3. **Smart FCFS** – An enhanced FCFS variant with an early switch-on policy.
+1. **PSUS** → power-state-unaware scheduling.
+2. **PSAS+IPM** → power-state-aware scheduling combined with an intelligent power manager that proactively switches nodes between active and low-power states.
+3. **Auto On** → baseline always-on configuration where nodes remain powered up at all times (no power saving).
+
 
 The simulation produces CSV logs containing job start/finish times, node allocations, and system events.
 
@@ -73,9 +120,10 @@ Notebook: create_ganttchart.ipynb
 This stage transforms raw CSV logs into visual insights.
 Outputs include:
 
+- Node log → per-interval node state (DVFS mode, state, submission/start/finish times, allocated nodes, job ID, terminated flag)
+- Job log → per-job lifecycle summary (job ID, event type, requested resources and nodes, submission/start/finish times, requested vs. actual runtime and finish time, terminated flag)
+- Summary metrics → aggregate waiting-time, energy, and time-in-state statistics (e.g., total_waiting_time, mean_waiting_time, total_energy_waste, total_energy_consumption, total_time_all_states)
 - Gantt chart → shows job execution timelines and node allocations
-- Job statistics → execution time, waiting time, utilization
-- Energy consumption analysis (if DVFS/platform states are enabled)
 
 These visualizations help you evaluate the effectiveness of different scheduling policies and platform configurations.
 
