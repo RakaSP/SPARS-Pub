@@ -6,7 +6,7 @@ It allows you to **generate workloads**, **define platforms**, **run scheduling 
 
 ### Prerequisites
 
-- Python 3.9 or newer
+- Python 3.11.13 or newer
 - Recommended: create a virtual environment to isolate dependencies
 
 ### Clone and Setup Environment
