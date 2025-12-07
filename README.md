@@ -55,6 +55,36 @@ This stage procedurally builds synthetic HPC job traces used as input to the sim
 - Minimum time unit (`min_time`)  
   Lower bound enforced on requested/actual runtimes to avoid zero-length jobs.
 
+### Result
+
+Given these parameters, the notebook generates a workload description as a JSON file  
+(e.g., `workloads/generated_500_8_ws.json`) that defines the jobs to be scheduled.
+
+### Workload format
+
+The generated JSON file has a single top-level object with:
+
+- **Number of resources** (`nb_res`)  
+  Total number of compute nodes available in the platform (matches `max_node`).
+
+- **Job list** (`jobs`)  
+  An array of job entries, each with:
+  - `job_id` – unique job identifier  
+  - `res` – number of requested nodes  
+  - `subtime` – job submission time  
+  - `reqtime` – requested execution time  
+  - `runtime` – actual execution time used by the simulator  
+  - `profile` – identifier of the job’s resource-usage profile  
+  - `user_id` – user identifier (e.g., for multi-user scenarios)
+
+- **Profiles** (`profiles`)  
+  Mapping from profile IDs (e.g., `"100"`) to a simple resource model:
+  - `cpu` – CPU work volume  
+  - `com` – communication volume  
+  - `type` – job type (e.g., `"parallel_homogeneous"`)
+
+Together, these fields describe the synthetic workload that the schedulers will execute on the generated platform.
+
 ## 🏗️ Platform Generation
 
 **Notebook:** `PlatformGenerator.ipynb`
