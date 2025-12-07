@@ -301,9 +301,6 @@ class BasePSAS:
     def build_callbacks(self):
         execution_finish_lists = []
 
-        if self.current_time == 977.1563697140423:
-            print('here')
-
         for node in self.next_releases:
             queues = node['queue']
             for q in queues:
@@ -461,9 +458,6 @@ class BasePSAS:
 
         now = self.current_time
 
-        if self.current_time == 7822:
-            print('here')
-
         # NEW: refresh (adds new idle nodes, removes non-idle)
         self._rebuild_timeout_list()
 
@@ -561,9 +555,6 @@ class BasePSAS:
         Rebuild partitions and resource_agenda from current state.
         """
         self.events = []
-
-        if round(self.current_time, 2) == 6594.98:
-            print('here')
 
         # Clear switch off list
         self.to_be_switched_off_ids = []

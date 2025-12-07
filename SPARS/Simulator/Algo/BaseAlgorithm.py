@@ -325,7 +325,6 @@ class BaseAlgorithm:
                     break
 
             if can_start:
-                # Just emit the execution_start event; do NOT touch resource_agenda here
                 get = itemgetter('job_id', 'subtime',
                                  'runtime', 'reqtime', 'res')
                 job_id, subtime, runtime, reqtime, res = get(job)
@@ -403,10 +402,6 @@ class BaseAlgorithm:
     def _rebuild_timeout_list(self):
         """
         Recompute timeout_list from CURRENT state/partitions.
-        Policy:
-        - If timeout is None: no timeouts -> clear list & marker.
-        - Else: every ACTIVE & IDLE, NON-RESERVED node must have a deadline.
-                Non-idle or reserved nodes must not have a deadline.
         """
         if self.timeout is None:
             self.timeout_list = []
@@ -517,8 +512,6 @@ class BaseAlgorithm:
                 self.switching_off.append(node)
 
     def prep_schedule(self):
-        if self.current_time == 1173600:
-            print('here')
         """
         Rebuild partitions and resource_agenda from current state.
         """
@@ -528,20 +521,14 @@ class BaseAlgorithm:
         self.waiting_queue = [
             job for job in waiting_queue if job['job_id'] not in scheduled_ids]
 
-        # Reconcile queues (no future phases added here)
         self._rebuild_next_releases_global()
-
-        # Rebuild partitions (disjoint)
         self._build_partitions()
-
-        # Rebuild timeout_list
         self._rebuild_timeout_list()
 
     # ---------------- Readiness helpers ----------------
     def _node_ready_at(self, node):
         """
         Predict the absolute time when 'node' can start computing if selected now.
-        This simply returns the 'release_time' from next_releases.
         """
         # Fetch the release time directly from next_releases (which holds the calculated next event time)
         node_id = node['id']
