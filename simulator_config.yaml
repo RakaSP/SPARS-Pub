@@ -11,8 +11,8 @@ run:
   start_time: 0
 
 rl:
-  enabled: true
-  learn: true
+  enabled: false
+  learn: false
   type: "discrete" # "discrete" | "continuous"
   dt: 1800 # required when type == "discrete"
   device: "cuda" # "cpu" | "cuda" | "auto" (explicit "auto" resolves to cuda if available)
