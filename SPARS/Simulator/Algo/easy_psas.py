@@ -1,450 +1,355 @@
-from math import inf
-import math
-from .fcfs_psas import FCFSPSAS
-import re
+from __future__ import annotations
 
-from SPARS.Simulator.Algo.fcfs_psas import FCFSPSAS
+import math
+import re
+from .fcfs_psas import FCFSPSAS
+
 _COMPUTE_RE = re.compile(r"^compute\(job=\d+\)$")
 
 
 class EASYPSAS(FCFSPSAS):
     """
-    Node selection is energy-aware:
-      Minimize ( sum(power) / min(compute_speed) ).
-    Tie-breaks:
-      1) Earliest Start Time
-      2) Lower total power
+    EASY backfilling:
+      - Run FCFS first (may reserve future jobs within this scheduling tick)
+      - Then backfill jobs that won't delay the first unscheduled job (head job),
+        using a planned release table (scheduled_node_release) that includes FCFS reservations.
     """
 
     # ---------- public ----------
     def schedule(self):
-
         super().prep_schedule()
 
-        # First: Run FCFS scheduling
+        # 1) FCFS plan + (commit-now allocations + switch_on events) as implemented in FCFSPSAS
         fcfs_scheduled_jobs = super().FCFSPSAS()
 
-        # Then: Apply backfilling on remaining jobs
+        # 2) EASY backfill using planned releases that include FCFS reservations
         self.backfill(fcfs_scheduled_jobs)
 
         if self.timeout is not None:
             super().timeout_policy()
+
         super().build_callbacks()
         return self.events
 
-    def backfill(self, fcfs_scheduled_jobs):
-        """EASY backfilling - backfill jobs that won't delay the first unscheduled job."""
-        if len(self.waiting_queue) <= 1:
+    # ---------- helpers: planned release table ----------
+    def _append_planned_compute(self, job, selected_nodes, job_start_time, releases_by_id):
+        """
+        Append compute phases into a planned releases table (scheduled_node_release).
+        Ensures node release_time becomes the last scheduled finish_time.
+        """
+        compute_speed = min(float(n["compute_speed"]) for n in selected_nodes)
+        walltime = float(job["reqtime"]) / compute_speed
+
+        # Ensure start_time is not earlier than any node's current planned release
+        cursor = max(float(releases_by_id[n["id"]]["release_time"]) for n in selected_nodes)
+        st = max(float(job_start_time), cursor)
+        ft = st + walltime
+
+        phase = f'compute(job={job["job_id"]})'
+        for n in selected_nodes:
+            entry = releases_by_id[n["id"]]
+            entry["queue"].append(
+                {"phase": phase, "start_time": float(st), "finish_time": float(ft)}
+            )
+            entry["release_time"] = float(ft)
+
+        return float(st), float(ft)
+
+    def _build_scheduled_node_release_from_fcfs(self, fcfs_selected_list):
+        """
+        Build scheduled_node_release (dict by node_id) starting from current next_releases,
+        then append ONLY FCFS future reservations (start_time > now).
+        """
+        base_by_id = super()._releases_by_id()
+
+        scheduled_by_id = {
+            nid: {
+                "node_id": nid,
+                "queue": [dict(seg) for seg in base_by_id[nid]["queue"]],
+                "release_time": float(base_by_id[nid]["release_time"]),
+            }
+            for nid in base_by_id
+        }
+
+        # FCFS already committed start<=now via allocate() -> those compute phases already exist in base queues.
+        # We only extend the plan with FCFS future reservations.
+        for job, nodes, start_time, _finish_time in sorted(fcfs_selected_list, key=lambda x: float(x[2])):
+            if float(start_time) <= self.current_time:
+                continue
+            self._append_planned_compute(job, nodes, float(start_time), scheduled_by_id)
+
+        return scheduled_by_id
+
+    def _protected_start_times(self, fcfs_selected_list, head_nodes=None, head_start_time=None):
+        """
+        For each node, record the earliest future reserved start_time that must not be delayed.
+        Includes:
+          - FCFS future reservations
+          - Head job reservation (EASY rule), if provided
+        """
+        protected = {}
+
+        for _job, nodes, start_time, _finish_time in fcfs_selected_list:
+            st = float(start_time)
+            if st <= self.current_time:
+                continue
+            for n in nodes:
+                nid = int(n["id"])
+                protected[nid] = min(protected.get(nid, math.inf), st)
+
+        if head_nodes is not None and head_start_time is not None:
+            st = float(head_start_time)
+            for n in head_nodes:
+                nid = int(n["id"])
+                protected[nid] = min(protected.get(nid, math.inf), st)
+
+        return protected
+
+    # ---------- EASY backfill ----------
+    def backfill(self, fcfs_started_jobs):
+        """
+        EASY backfill:
+        - FCFS already started runnable jobs now and reserved exactly ONE head job in selected_list.
+        - Backfill jobs behind head if they can start now and won't delay head start.
+        """
+        now = float(self.current_time)
+
+        # Find head reservation created by FCFS: first tuple with start_time > now
+        head_entry = None
+        for job, nodes, st, ft in self.selected_list:
+            if float(st) > now and job["job_id"] not in fcfs_started_jobs:
+                head_entry = (job, nodes, float(st), float(ft))
+                break
+
+        if head_entry is None:
+            return  # no head reserved => nothing to protect/backfill against
+
+        head_job, head_nodes, head_start, _head_finish = head_entry
+        head_job_id = head_job["job_id"]
+        head_node_ids = {int(n["id"]) for n in head_nodes}
+
+        # If head_start is unknown/infinite, be conservative: don't backfill
+        if math.isinf(head_start) or head_start <= now:
             return
 
-        fcfs_selected = self.selected_list[:]
+        # Only backfill jobs BEHIND the head job in queue order
+        seen_head = False
+        for job in self.waiting_queue[:]:
+            if job["job_id"] == head_job_id:
+                seen_head = True
+                continue
+            if not seen_head:
+                continue
 
-        # Get jobs not scheduled by FCFS
-        unscheduled_jobs = [
-            job for job in self.waiting_queue if job['job_id'] not in fcfs_scheduled_jobs]
+            # Skip jobs already started by FCFS
+            if job["job_id"] in fcfs_started_jobs:
+                continue
 
-        if not unscheduled_jobs:
-            return
+            required = int(job["res"])
+            if len(self.idle) < required:
+                continue
 
-        # Get ALL reserved nodes from selected_list (not just head job)
-        all_reserved_nodes = set()
-        backfill_reserved_nodes = set()
-        for job, nodes, start_time, finish_time in self.selected_list:
-            all_reserved_nodes.update(node['id'] for node in nodes)
+            # time window if we end up using head nodes
+            window = head_start - now
+            if window <= 0:
+                return
 
-        # Step 1: Find the head job - prioritize future-scheduled jobs from selected_list
-        head_job = None
-        head_start_time = None
-        head_finish_time = None
-        head_nodes = None
+            # Minimum per-node speed needed so finish <= head_start (since runtime uses min speed)
+            min_speed_needed = float(job["reqtime"]) / float(window)
 
-        # Look for the latest job in selected_list that's scheduled in the future
-        for job, nodes, start_time, finish_time in self.selected_list:
-            if start_time > self.current_time:
-                # This job is scheduled for future execution
-                if head_start_time is None or start_time > head_start_time:
-                    head_start_time = start_time
-                    head_finish_time = finish_time
-                    head_job = job
-                    head_nodes = nodes
+            releases_by_id = super()._releases_by_id()
 
-        # If no future-scheduled job found, use the first unscheduled job
-        if head_job is None:
-            head_job = unscheduled_jobs[0]
-            # Calculate head job start time using enhanced next_releases
-            enhanced_releases = self._get_enhanced_next_releases()
+            # Step A: prefer NOT using head nodes at all
+            non_head_idle = [n for n in self.idle if int(n["id"]) not in head_node_ids]
+            if len(non_head_idle) >= required:
+                res = self._select_nodes_energy_aware(
+                    required_nodes=required,
+                    _candidates=non_head_idle,
+                    releases_by_id=releases_by_id,
+                    min_start_time=now,
+                )
+                if res is not None:
+                    selected, st = res
+                    if float(st) <= now:
+                        super().allocate(job, selected)
+                        # track schedule
+                        speed = min(float(n["compute_speed"]) for n in selected)
+                        ft = now + float(job["reqtime"]) / speed
+                        self.selected_list.append((job, selected, now, ft))
+                        continue
 
-            if len(enhanced_releases) < head_job['res']:
-                return  # Not enough nodes for head job
+            # Step B: allow using head nodes IF (all chosen nodes) are fast enough to finish before head_start
+            eligible = [n for n in self.idle if float(n["compute_speed"]) >= min_speed_needed]
+            if len(eligible) < required:
+                continue
 
-            # Use our node selection to find the best nodes for head job
-            candidates = list(self.idle) + list(self.sleeping) + \
-                list(self.computing) + list(self.switching_on)
-            result = self._select_nodes_energy_aware(
-                head_job['res'], candidates)
+            # still prefer non-head among eligible
+            eligible_non_head = [n for n in eligible if int(n["id"]) not in head_node_ids]
+            pool = eligible_non_head if len(eligible_non_head) >= required else eligible
 
-            if result is None:
-                return  # Cannot schedule head job
+            res = self._select_nodes_energy_aware(
+                required_nodes=required,
+                _candidates=pool,
+                releases_by_id=releases_by_id,
+                min_start_time=now,
+            )
+            if res is None:
+                continue
 
-            head_nodes, head_start_time = result
-            # Calculate finish time for head job
-            min_compute_speed = min(node['compute_speed']
-                                    for node in head_nodes)
-            head_finish_time = head_start_time + \
-                (head_job['reqtime'] / min_compute_speed)
+            selected, st = res
+            if float(st) > now:
+                continue
 
-        # Try to backfill subsequent unscheduled jobs
-        backfill_queue = unscheduled_jobs[1:
-                                          ] if head_job in unscheduled_jobs else unscheduled_jobs
-
-        for job in backfill_queue:
-
-            required = job['res']
-
-            # Step 1: Try with idle nodes not reserved for ANY scheduled job
-            candidates = list(self.idle)
-            not_reserved = [
-                candidate for candidate in candidates if candidate['id'] not in all_reserved_nodes]
-
-            if len(not_reserved) >= required:
-                # Enough non-reserved nodes available
-                result = self._select_nodes_energy_aware(
-                    required, not_reserved)
-                if result is not None:
-                    selected, start_time = result
-                    # Backfill this job immediately
-                    super().allocate(job, selected)
-                    # UPDATE: Add to selected_list and update reserved nodes
-                    min_compute_speed = min(
-                        node['compute_speed'] for node in selected)
-                    finish_time = start_time + \
-                        (job['reqtime'] / min_compute_speed)
-                    self.selected_list.append(
-                        (job, selected, start_time, finish_time))
-                    all_reserved_nodes.update(node['id'] for node in selected)
-                    backfill_reserved_nodes.update(
-                        node['id'] for node in selected)
-
+            # Final safety check: if any head node used, must finish before head_start
+            speed = min(float(n["compute_speed"]) for n in selected)
+            finish = now + float(job["reqtime"]) / speed
+            if any(int(n["id"]) in head_node_ids for n in selected):
+                if finish > head_start:
                     continue
 
-            # Step 2: Try with all idle nodes (including reserved ones) if job finishes before head job starts
-            candidates = list(self.idle)
-            candidates = [
-                candidate for candidate in candidates if candidate['id'] not in backfill_reserved_nodes]
-            if len(candidates) >= required:
-                result = self._backfill_select_nodes_energy_aware(
-                    job, required, candidates, fcfs_selected)
-                if result is not None:
-                    selected, start_time = result
-                    super().allocate(job, selected)
-                    # UPDATE: Add to selected_list and update reserved nodes
-                    min_compute_speed = min(
-                        node['compute_speed'] for node in selected)
-                    finish_time = start_time + \
-                        (job['reqtime'] / min_compute_speed)
-                    self.selected_list.append(
-                        (job, selected, start_time, finish_time))
-                    all_reserved_nodes.update(node['id'] for node in selected)
-                    backfill_reserved_nodes.update(
-                        node['id'] for node in selected)
-                    continue
+            super().allocate(job, selected)
+            self.selected_list.append((job, selected, now, finish))
 
-            # Step 3: Include all nodes
-            candidates = (list(self.idle) + list(self.sleeping) +
-                          list(self.computing) + list(self.switching_on))
 
-            # Filter out nodes reserved for ALL scheduled jobs
-            candidates = [candidate for candidate in candidates
-                          if candidate['id'] not in all_reserved_nodes]
-
-            if len(candidates) >= required:
-
-                result = self._select_nodes_energy_aware(
-                    required, candidates)
-                if result is not None:
-                    selected, start_time = result
-
-                    # Calculate finish time
-                    min_compute_speed = min(
-                        node['compute_speed'] for node in selected)
-                    finish_time = start_time + \
-                        (job['reqtime'] / min_compute_speed)
-
-                    # UPDATE: Add to selected_list and update reserved nodes
-                    self.selected_list.append(
-                        (job, selected, start_time, finish_time))
-                    all_reserved_nodes.update(node['id'] for node in selected)
-                    backfill_reserved_nodes.update(
-                        node['id'] for node in selected)
-
-                    # Find sleeping nodes that need to be woken up
-                    selected_ids = [n['id'] for n in selected]
-                    sleeping_ids = {n['id'] for n in self.sleeping}
-                    switch_on_nodes = []
-                    for nid in selected_ids:
-                        if nid in sleeping_ids:
-                            switch_on_nodes.append(nid)
-
-                    if switch_on_nodes:
-                        # Use the calculated start_time for switch_on events
-                        self._schedule_switch_on_events(
-                            job, selected, switch_on_nodes, start_time)
-
-                    continue
-
-        # Step 4: Include ALL nodes and check if job can finish before head job starts
-            candidates = (list(self.idle) + list(self.sleeping) +
-                          list(self.computing) + list(self.switching_on))
-
-            candidates = [
-                candidate for candidate in candidates if candidate['id'] not in backfill_reserved_nodes]
-
-            if len(candidates) >= required:
-                result = self._backfill_select_nodes_energy_aware(
-                    job, required, candidates, fcfs_selected)
-                if result is not None:
-                    selected, start_time = result
-
-                    # Calculate finish time
-                    min_compute_speed = min(
-                        node['compute_speed'] for node in selected)
-                    finish_time = start_time + \
-                        (job['reqtime'] / min_compute_speed)
-
-                    # UPDATE: Add to selected_list and update reserved nodes
-                    self.selected_list.append(
-                        (job, selected, start_time, finish_time))
-                    all_reserved_nodes.update(node['id'] for node in selected)
-                    backfill_reserved_nodes.update(
-                        node['id'] for node in selected)
-
-                    # Find sleeping nodes that need to be woken up
-                    selected_ids = [n['id'] for n in selected]
-                    sleeping_ids = {n['id'] for n in self.sleeping}
-                    switch_on_nodes = []
-                    for nid in selected_ids:
-                        if nid in sleeping_ids:
-                            switch_on_nodes.append(nid)
-
-                    if switch_on_nodes:
-                        # Use the calculated start_time for switch_on events
-                        self._schedule_switch_on_events(
-                            job, selected, switch_on_nodes, start_time)
-
-                    continue
-
-    def _get_enhanced_next_releases(self):
-        """Create enhanced next_releases that includes FCFS-scheduled future jobs."""
-        # Start with current next_releases
-        enhanced_releases = self.next_releases.copy()
-
-        # Add finish times from selected_list
-        for job, nodes, start_time, finish_time in self.selected_list:
-            if start_time > self.current_time:  # Future scheduled job
-                # Update each node's release time
-                for node in nodes:
-                    found = False
-                    for release in enhanced_releases:
-                        if release['node_id'] == node['id']:
-                            # Use the later release time
-                            release['release_time'] = max(
-                                release['release_time'], finish_time)
-                            found = True
-                            break
-
-                    if not found:
-                        enhanced_releases.append({
-                            'node_id': node['id'],
-                            'release_time': finish_time
-                        })
-
-        # Sort by release_time
-        enhanced_releases.sort(key=lambda x: x['release_time'])
-        return enhanced_releases
-
-    def _backfill_select_nodes_energy_aware(self, job, required_nodes, candidates, fcfs_selected_list):
-        releases_by_id = super()._releases_by_id()
-        candidates = [n for n in candidates if not math.isinf(
-            releases_by_id[n['id']]['release_time'])]
+    # ---------- backfill selector (planned-release aware) ----------
+    def _backfill_select_nodes_energy_aware(
+        self,
+        job,
+        required_nodes: int,
+        candidates,
+        protected_starts: dict[int, float],
+        releases_by_id: dict,
+        min_start_time: float | None = None,
+        max_start_time: float | None = None,
+    ):
+        """
+        Like _select_nodes_energy_aware but with constraint:
+          finish_time <= min(protected_starts[node_id]) across selected nodes.
+        Uses a planned releases table (releases_by_id) so it includes “currently scheduled” nodes.
+        """
+        # filter: must exist + finite release_time
+        candidates = [
+            n for n in candidates
+            if (n["id"] in releases_by_id) and (not math.isinf(float(releases_by_id[n["id"]]["release_time"])))
+        ]
         if len(candidates) < required_nodes:
             return None
 
-        # Precompute earliest start time for each node from FCFS jobs
-        node_earliest_start = {}
-        for fcfs_job, fcfs_nodes, start_time, finish_time in fcfs_selected_list:
-            for node in fcfs_nodes:
-                nid = node['id']
-                if nid not in node_earliest_start or start_time < node_earliest_start[nid]:
-                    node_earliest_start[nid] = start_time
+        if min_start_time is None:
+            min_start_time = -math.inf
+        else:
+            min_start_time = float(min_start_time)
 
-        machine_by_id = {m['id']: m for m in self.machines.machines}
+        if max_start_time is not None:
+            max_start_time = float(max_start_time)
 
-        # Precompute per-node data
-        node_data = {}
+        machine_by_id = {m["id"]: m for m in self.machines.machines}
+
+        node_power_data = {}
         for node in candidates:
-            nid = node['id']
+            nid = int(node["id"])
             node_release = releases_by_id[nid]
             machine = machine_by_id[nid]
 
-            base_energy_waste = 0.0
-            for q in node_release['queue']:
-                if q['start_time'] < self.current_time:
-                    duration = q['finish_time'] - self.current_time
-                else:
-                    duration = q['finish_time'] - q['start_time']
+            # consistent label (idle/computing) for active state
+            if node["state"] == "active" and node.get("job_id") is None:
+                state_label = "idle"
+            elif node["state"] == "active" and node.get("job_id") is not None:
+                state_label = "computing"
+            else:
+                state_label = node["state"]
 
-                if _COMPUTE_RE.fullmatch(str(q['phase'])):
+            base_energy_waste = 0.0
+            for q in node_release["queue"]:
+                ft = float(q["finish_time"])
+                if math.isinf(ft):
+                    # if non-compute phase is inf (shouldn't happen), treat as not usable
+                    if not _COMPUTE_RE.fullmatch(str(q["phase"])):
+                        base_energy_waste = math.inf
+                        break
                     continue
 
-                e_rate = machine['states'][q['phase']]['power']
-                if e_rate == 'from_dvfs':
-                    dvfs_profiles = machine['dvfs_profiles']
-                    dvfs_mode = node['dvfs_mode']
-                    e_rate = dvfs_profiles[dvfs_mode]['power']
+                if float(q["start_time"]) < self.current_time:
+                    duration = ft - self.current_time
+                else:
+                    duration = ft - float(q["start_time"])
 
-                base_energy_waste += e_rate * duration
+                if _COMPUTE_RE.fullmatch(str(q["phase"])):
+                    continue
 
-            idle_power = machine['states']['active']['power']
-            if idle_power == 'from_dvfs':
-                dvfs_profiles = machine['dvfs_profiles']
-                dvfs_mode = node['dvfs_mode']
-                idle_power = dvfs_profiles[dvfs_mode]['power']
+                e_rate = machine["states"][q["phase"]]["power"]
+                if e_rate == "from_dvfs":
+                    dvfs_profiles = machine["dvfs_profiles"]
+                    dvfs_mode = node["dvfs_mode"]
+                    e_rate = dvfs_profiles[dvfs_mode]["power"]
 
-            # Calculate priorities
-            state = node['state']
-            if state == 'idle':
-                state_priority = 0
-            elif state == 'computing':
-                state_priority = 1
-            elif state == 'switching_on':
-                state_priority = 2
-            else:
-                state_priority = 3
+                base_energy_waste += float(e_rate) * float(duration)
 
-            if state == 'idle':
-                timeout_priority = -self._remaining_idle_timeout(nid)
-            else:
-                timeout_priority = 0
+            idle_power = machine["states"]["active"]["power"]
+            if idle_power == "from_dvfs":
+                dvfs_profiles = machine["dvfs_profiles"]
+                dvfs_mode = node["dvfs_mode"]
+                idle_power = dvfs_profiles[dvfs_mode]["power"]
 
-            node_data[nid] = {
-                'node': node,
-                'base': float(base_energy_waste),
-                'idle': float(idle_power),
-                'release': float(node_release['release_time']),
-                'state_priority': state_priority,
-                'timeout_priority': timeout_priority,
+            node_power_data[nid] = {
+                "base": float(base_energy_waste),
+                "idle": float(idle_power),
+                "release": float(node_release["release_time"]),
+                "state_label": state_label,
+                "node": node,
             }
 
-        # Generate all valid combinations
-        valid_combos = []
-
-        # Get all possible start times
-        releases_sorted = sorted({data['release']
-                                 for data in node_data.values()})
+        releases_sorted = sorted({d["release"] for d in node_power_data.values()} | {min_start_time})
+        items = list(node_power_data.items())
 
         for t in releases_sorted:
-            # Get nodes available at time t
-            available_nodes = []
-            for nid, data in node_data.items():
-                if data['release'] <= t:
-                    # Calculate cost for this node at time t
-                    if data['node']['state'] == 'switching_off' or data['node']['state'] == 'sleeping':
-                        cost = data['base']
-                    else:
-                        cost = data['base'] + data['idle'] * \
-                            (t - data['release'])
-
-                    available_nodes.append({
-                        'nid': nid,
-                        'node': data['node'],
-                        'cost': cost,
-                        'state_priority': data['state_priority'],
-                        'timeout_priority': data['timeout_priority'],
-                    })
-
-            if len(available_nodes) < required_nodes:
+            if t < min_start_time:
+                continue
+            if (max_start_time is not None) and (t >= max_start_time):
                 continue
 
-            # Sort available nodes by priority criteria
-            available_nodes.sort(key=lambda x: (
-                x['cost'],
-                x['state_priority'],
-                x['timeout_priority'],
-                x['nid']
-            ))
+            eligible = []
+            for nid, dat in items:
+                r = dat["release"]
+                if r <= t:
+                    if dat["state_label"] in ("switching_off", "sleeping"):
+                        cost = dat["base"]
+                    else:
+                        cost = dat["base"] + dat["idle"] * (t - r)
 
-            # Generate combinations using the top nodes
-            combo_nodes = [item['node']
-                           for item in available_nodes[:required_nodes]]
+                    state = dat["state_label"]
+                    if state == "idle":
+                        state_priority = 0
+                    elif state == "computing":
+                        state_priority = 1
+                    elif state == "switching_on":
+                        state_priority = 2
+                    else:
+                        state_priority = 3
 
-            # Calculate finish time
-            min_compute_speed = min(node['compute_speed']
-                                    for node in combo_nodes)
-            finish_time = t + (job['reqtime'] / min_compute_speed)
+                    if state == "idle":
+                        timeout_priority = -self._remaining_idle_timeout(nid)
+                    else:
+                        timeout_priority = 0
 
-            # Check constraint
-            max_allowed_finish = min(node_earliest_start.get(
-                node['id'], float('inf')) for node in combo_nodes)
+                    eligible.append((nid, cost, state_priority, timeout_priority))
+
+            if len(eligible) < required_nodes:
+                continue
+
+            ranked = sorted((cost, sp, tp, nid) for (nid, cost, sp, tp) in eligible)
+
+            combo_ids = [nid for (_c, _sp, _tp, nid) in ranked[:required_nodes]]
+            selected_nodes = [node_power_data[nid]["node"] for nid in combo_ids]
+
+            # finish time check against protected starts (earliest reserved start per node)
+            compute_speed = min(float(n["compute_speed"]) for n in selected_nodes)
+            walltime = float(job["reqtime"]) / compute_speed
+            finish_time = float(t) + walltime
+
+            max_allowed_finish = min(protected_starts.get(int(n["id"]), math.inf) for n in selected_nodes)
 
             if finish_time <= max_allowed_finish:
-                total_cost = sum(item['cost']
-                                 for item in available_nodes[:required_nodes])
-                worst_state_priority = max(
-                    item['state_priority'] for item in available_nodes[:required_nodes])
-                worst_timeout_priority = min(
-                    item['timeout_priority'] for item in available_nodes[:required_nodes])
+                return (selected_nodes, float(t))
 
-                valid_combos.append({
-                    'nodes': combo_nodes,
-                    'start_time': t,
-                    'total_cost': total_cost,
-                    'worst_state_priority': worst_state_priority,
-                    'worst_timeout_priority': worst_timeout_priority,
-                    'node_ids': sorted(node['id'] for node in combo_nodes)
-                })
-
-        if not valid_combos:
-            return None
-
-        # Selection logic with multiple tie-breaking layers
-        # Layer 1: Earliest start time
-        min_start_time = min(combo['start_time'] for combo in valid_combos)
-        tied_combos = [
-            combo for combo in valid_combos if combo['start_time'] == min_start_time]
-
-        if len(tied_combos) == 1:
-            best_combo = tied_combos[0]
-            return (best_combo['nodes'], best_combo['start_time'])
-
-        # Layer 2: Least energy waste
-        min_cost = min(combo['total_cost'] for combo in tied_combos)
-        tied_combos = [
-            combo for combo in tied_combos if combo['total_cost'] == min_cost]
-
-        if len(tied_combos) == 1:
-            best_combo = tied_combos[0]
-            return (best_combo['nodes'], best_combo['start_time'])
-
-        # Layer 3: Best timeout priority (most negative)
-        best_timeout = min(combo['worst_timeout_priority']
-                           for combo in tied_combos)
-        tied_combos = [
-            combo for combo in tied_combos if combo['worst_timeout_priority'] == best_timeout]
-
-        if len(tied_combos) == 1:
-            best_combo = tied_combos[0]
-            return (best_combo['nodes'], best_combo['start_time'])
-
-        # Layer 4: Best state priority (lowest number)
-        best_state = min(combo['worst_state_priority']
-                         for combo in tied_combos)
-        tied_combos = [
-            combo for combo in tied_combos if combo['worst_state_priority'] == best_state]
-
-        if len(tied_combos) == 1:
-            best_combo = tied_combos[0]
-            return (best_combo['nodes'], best_combo['start_time'])
-
-        # Final tie-break: lexicographically smallest node IDs
-        best_combo = min(tied_combos, key=lambda x: x['node_ids'])
-        return (best_combo['nodes'], best_combo['start_time'])
+        return None

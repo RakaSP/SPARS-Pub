@@ -5,7 +5,7 @@ import re
 _COMPUTE_RE = re.compile(r"^compute\(job=\d+\)$")
 
 
-class FCFSPSAS(BasePSAS):
+class SNFPSAS(BasePSAS):
     """
     Node selection is energy-aware:
       Minimize ( sum(power) / min(compute_speed) ).
@@ -24,23 +24,16 @@ class FCFSPSAS(BasePSAS):
 
         super().prep_schedule()
 
-        self.FCFSPSAS()
+        self.SNFPSAS()
 
         if self.timeout is not None:
             super().timeout_policy()
         super().build_callbacks()
         return self.events
 
-    def FCFSPSAS(self):
-        """
-        FCFS for EASY:
-        - Execute-now FCFS until first job cannot start now
-        - Reserve ONLY that first blocked job (head job) to schedule switch_on precisely
-        - Do NOT reserve beyond head (otherwise EASY backfill has nothing to do)
-        """
-        fcfs_started_jobs = set()
+    def SNFPSAS(self):
+        snf_scheduled_jobs = set()
 
-        # --- planned release table (same shape as next_releases entries) ---
         base_by_id = super()._releases_by_id()
         scheduled_by_id = {
             nid: {
@@ -51,86 +44,87 @@ class FCFSPSAS(BasePSAS):
             for nid in base_by_id
         }
 
-        def _planned_release(nid: int) -> float:
-            return float(scheduled_by_id[nid]["release_time"])
+        def _planned_release(n):
+            return float(scheduled_by_id[n["id"]]["release_time"])
 
-        def _append_planned_compute(job, selected_nodes, job_start_time: float):
-            # walltime is determined by slowest node in the allocation
+        def _append_planned_compute(job, selected_nodes, job_start_time):
             compute_speed = min(float(n["compute_speed"]) for n in selected_nodes)
             walltime = float(job["reqtime"]) / compute_speed
-
-            # start must be >= each node planned release
-            cursor = max(_planned_release(int(n["id"])) for n in selected_nodes)
-            st = max(float(job_start_time), float(cursor))
-            ft = st + walltime
+            finish_time = float(job_start_time) + walltime
 
             phase = f'compute(job={job["job_id"]})'
             for n in selected_nodes:
-                nid = int(n["id"])
-                entry = scheduled_by_id[nid]
-                entry["queue"].append({"phase": phase, "start_time": st, "finish_time": ft})
-                entry["release_time"] = ft
+                entry = scheduled_by_id[n["id"]]
+                entry["queue"].append({
+                    "phase": phase,
+                    "start_time": float(job_start_time),
+                    "finish_time": float(finish_time),
+                })
+                entry["release_time"] = float(finish_time)
 
-            return st, ft
+            return float(finish_time)
 
-        now = float(self.current_time)
+        job_schedules = []
+        barrier = self.current_time  # keep nondecreasing start times, now in SNF order
 
-        for job in self.waiting_queue[:]:
+        def _job_key(j):
+            res = int(j["res"])
+            sub = float(j.get("subtime", 0.0))
+            jid = int(j.get("job_id", 0))
+            return (res, sub, jid)
+
+        jobs_sorted = sorted(self.waiting_queue[:], key=_job_key)
+
+        for job in jobs_sorted:
             required = int(job["res"])
+            min_start_time = barrier
 
-            # ---- 1) Try to EXECUTE NOW using only idle nodes that are free now in the plan ----
-            idle_now = [
-                n for n in self.idle
-                if (not math.isinf(_planned_release(int(n["id"]))))
-                and (_planned_release(int(n["id"])) <= now)
-            ]
+            if min_start_time <= self.current_time:
+                idle_now = [
+                    n for n in self.idle
+                    if (not math.isinf(_planned_release(n))) and (_planned_release(n) <= self.current_time)
+                ]
+                if len(idle_now) >= required:
+                    selected = idle_now[:required]
+                    start_time = self.current_time
+                    finish_time = _append_planned_compute(job, selected, start_time)
 
-            if len(idle_now) >= required:
-                res = self._select_nodes_energy_aware(
-                    required_nodes=required,
-                    _candidates=idle_now,
-                    releases_by_id=scheduled_by_id,
-                    min_start_time=now,
-                )
-                if res is not None:
-                    selected, start_time = res
-                    if float(start_time) <= now:
-                        st, ft = _append_planned_compute(job, selected, now)
+                    job_schedules.append((job, selected, start_time, finish_time))
+                    snf_scheduled_jobs.add(job["job_id"])
+                    barrier = start_time
+                    continue
 
-                        # for timeout_policy decisions
-                        self.selected_list.append((job, selected, st, ft))
-
-                        # commit execution now (updates real next_releases + partitions)
-                        super().allocate(job, selected)
-
-                        fcfs_started_jobs.add(job["job_id"])
-                        continue
-
-            # ---- 2) First blocked job => reserve HEAD ONLY, schedule switch_on, then STOP ----
             candidates = list(self.idle) + list(self.sleeping) + list(self.computing) + list(self.switching_on)
 
-            head_res = self._select_nodes_energy_aware(
+            result = self._select_nodes_energy_aware(
                 required_nodes=required,
                 _candidates=candidates,
                 releases_by_id=scheduled_by_id,
-                min_start_time=now,
+                min_start_time=min_start_time,
             )
-            if head_res is not None:
-                selected, head_start_time = head_res
-                st, ft = _append_planned_compute(job, selected, float(head_start_time))
+            if result is None:
+                break
 
-                # record head reservation so timeout_policy can protect it
-                self.selected_list.append((job, selected, st, ft))
+            selected, start_time = result
+            finish_time = _append_planned_compute(job, selected, start_time)
 
-                # schedule switch_on precisely for sleeping nodes used by head
+            job_schedules.append((job, selected, start_time, finish_time))
+            snf_scheduled_jobs.add(job["job_id"])
+            barrier = start_time
+
+        for job, selected, start_time, finish_time in job_schedules:
+            self.selected_list.append((job, selected, start_time, finish_time))
+
+            if start_time <= self.current_time:
+                super().allocate(job, selected)
+            else:
+                selected_ids = [n["id"] for n in selected]
                 sleeping_ids = {n["id"] for n in self.sleeping}
-                switch_on_nodes = [n["id"] for n in selected if n["id"] in sleeping_ids]
+                switch_on_nodes = [nid for nid in selected_ids if nid in sleeping_ids]
                 if switch_on_nodes:
-                    self._schedule_switch_on_events(job, selected, switch_on_nodes, st)
+                    self._schedule_switch_on_events(job, selected, switch_on_nodes, start_time)
 
-            break  # <- IMPORTANT: stop after reserving head
-
-        return fcfs_started_jobs
+        return snf_scheduled_jobs
 
 
 
