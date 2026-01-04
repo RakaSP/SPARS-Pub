@@ -1,67 +1,175 @@
-from __future__ import annotations
+import math
+from .fcfs_psas import FCFSPSAS
 
 import math
 import re
-from .fcfs_psas import FCFSPSAS
 
 _COMPUTE_RE = re.compile(r"^compute\(job=\d+\)$")
 
 
 class EASYPSAS(FCFSPSAS):
     """
-    EASY backfilling:
-      - Run FCFS first (may reserve future jobs within this scheduling tick)
-      - Then backfill jobs that won't delay the first unscheduled job (head job),
-        using a planned release table (scheduled_node_release) that includes FCFS reservations.
+    Option B (fixed):
+      - FCFS is used for planning only (no switch_on emitted by FCFS).
+      - EASY backfill only ALLOCATES jobs that start NOW (commit-only).
+      - Head job is RESERVED (FCFS-chosen nodes), never delayed by backfill.
+      - Then we build a FINAL future FCFS plan seeded with the head reservation.
+      - From that FINAL plan we emit wake triggers:
+          * switch_on now if needed
+          * call_me_later_so at wake times for future starts
     """
 
     # ---------- public ----------
     def schedule(self):
         super().prep_schedule()
+        now = float(self.current_time)
 
-        # 1) FCFS plan + (commit-now allocations + switch_on events) as implemented in FCFSPSAS
-        fcfs_scheduled_jobs = super().FCFSPSAS()
+        # 1) FCFS plan-only from current state (no events)
+        super().FCFSPSAS(plan_only=True)
+        plan0 = list(self.selected_list)  # [(job, nodes, st, ft), ...]
 
-        # 2) EASY backfill using planned releases that include FCFS reservations
-        self.backfill(fcfs_scheduled_jobs)
+        # 2) Allocate the FCFS "start-now prefix" (must match FCFS behavior)
+        started_now = set()
+        for job, nodes, st, ft in plan0:
+            if float(st) <= now + 1e-9:
+                super().allocate(job, nodes)
+                started_now.add(job["job_id"])
+            else:
+                break
+
+        # 3) Head job = first waiting job not started-now
+        head_job = next((j for j in self.waiting_queue if j["job_id"] not in started_now), None)
+        if head_job is None:
+            # no future job to reserve
+            self.selected_list = []
+            if self.timeout is not None:
+                super().timeout_policy()
+            super().build_callbacks()
+            return self.events
+
+        # Find head tuple from FCFS plan0
+        head_nodes, head_start, head_finish = None, None, None
+        for j, nodes, st, ft in plan0:
+            if j["job_id"] == head_job["job_id"]:
+                head_nodes = nodes
+                head_start = float(st)
+                head_finish = float(ft)
+                break
+
+        # Fallback if FCFS couldn't plan it (rare)
+        if head_nodes is None:
+            candidates = list(self.idle) + list(self.sleeping) + list(self.computing) + list(self.switching_on)
+            res = self._select_nodes_energy_aware(int(head_job["res"]), candidates, min_start_time=now)
+            if res is None:
+                self.selected_list = []
+                if self.timeout is not None:
+                    super().timeout_policy()
+                super().build_callbacks()
+                return self.events
+            head_nodes, head_start = res
+            sp = min(float(n["compute_speed"]) for n in head_nodes)
+            head_finish = float(head_start) + (float(head_job["reqtime"]) / sp)
+
+        head_reserved_ids = {n["id"] for n in head_nodes}
+
+        # 4) EASY backfill (commit-only): start jobs NOW if they fit and don't delay head
+        self._easy_backfill_now(
+            started_now=started_now,
+            head_job_id=head_job["job_id"],
+            head_start_time=float(head_start),
+            head_reserved_ids=head_reserved_ids,
+        )
+
+        # 5) Build FINAL future plan (FCFS-style) seeded with the head reservation,
+        #    so wake planning matches the actual decisions after backfill.
+        remaining_jobs = [
+            j for j in self.waiting_queue
+            if (j["job_id"] not in started_now) and (j["job_id"] != head_job["job_id"])
+        ]
+
+        rest_plan = self._fcfs_plan_with_head_seed(
+            jobs=remaining_jobs,
+            head_job=head_job,
+            head_nodes=head_nodes,
+            head_start=float(head_start),
+        )
+
+        # Expose final reservation plan to timeout_policy (like FCFS), but consistent.
+        self.selected_list = [(head_job, head_nodes, float(head_start), float(head_finish))] + rest_plan
+
+        # 6) Wake planning from FINAL plan:
+        #    - switch_on now only if we're already at/after the wake time
+        #    - otherwise schedule call_me_later_so at wake times
+        self._emit_wake_triggers_from_plan(self.selected_list)
 
         if self.timeout is not None:
             super().timeout_policy()
-
         super().build_callbacks()
         return self.events
 
-    # ---------- helpers: planned release table ----------
-    def _append_planned_compute(self, job, selected_nodes, job_start_time, releases_by_id):
-        """
-        Append compute phases into a planned releases table (scheduled_node_release).
-        Ensures node release_time becomes the last scheduled finish_time.
-        """
-        compute_speed = min(float(n["compute_speed"]) for n in selected_nodes)
-        walltime = float(job["reqtime"]) / compute_speed
+    # ---------- EASY backfill (commit-only) ----------
+    def _easy_backfill_now(self, started_now, head_job_id, head_start_time, head_reserved_ids):
+        now = float(self.current_time)
+        head_start_time = float(head_start_time)
 
-        # Ensure start_time is not earlier than any node's current planned release
-        cursor = max(float(releases_by_id[n["id"]]["release_time"]) for n in selected_nodes)
-        st = max(float(job_start_time), cursor)
-        ft = st + walltime
+        seen_head = False
+        for job in self.waiting_queue:
+            jid = job["job_id"]
 
-        phase = f'compute(job={job["job_id"]})'
-        for n in selected_nodes:
-            entry = releases_by_id[n["id"]]
-            entry["queue"].append(
-                {"phase": phase, "start_time": float(st), "finish_time": float(ft)}
-            )
-            entry["release_time"] = float(ft)
+            if jid == head_job_id:
+                seen_head = True
+                continue
+            if not seen_head:
+                continue
 
-        return float(st), float(ft)
+            if jid in started_now:
+                continue
 
-    def _build_scheduled_node_release_from_fcfs(self, fcfs_selected_list):
+            required = int(job["res"])
+            if required <= 0:
+                continue
+
+            # Step 1: idle nodes NOT reserved for head
+            idle_non_reserved = [n for n in self.idle if n["id"] not in head_reserved_ids]
+            if len(idle_non_reserved) >= required:
+                r = self._select_nodes_energy_aware(required, idle_non_reserved, min_start_time=now)
+                if r is not None:
+                    selected, st = r
+                    if float(st) <= now + 1e-9:
+                        super().allocate(job, selected)
+                        started_now.add(jid)
+                        continue
+
+            # Step 2: allow using reserved idle nodes ONLY if finish <= head_start_time
+            idle_all = list(self.idle)
+            if len(idle_all) >= required:
+                r = self._select_nodes_energy_aware(required, idle_all, min_start_time=now)
+                if r is None:
+                    continue
+                selected, st = r
+                if float(st) > now + 1e-9:
+                    continue
+
+                uses_reserved = any(n["id"] in head_reserved_ids for n in selected)
+                if uses_reserved:
+                    sp = min(float(n["compute_speed"]) for n in selected)
+                    finish = now + (float(job["reqtime"]) / sp)
+                    if finish > head_start_time + 1e-9:
+                        continue
+
+                super().allocate(job, selected)
+                started_now.add(jid)
+
+    # ---------- FCFS planning with head seed ----------
+    def _fcfs_plan_with_head_seed(self, jobs, head_job, head_nodes, head_start):
         """
-        Build scheduled_node_release (dict by node_id) starting from current next_releases,
-        then append ONLY FCFS future reservations (start_time > now).
+        Build a future FCFS plan on top of the CURRENT state (after backfill allocations),
+        but treat the head reservation as already occupying its nodes from head_start..head_finish.
+        Returns: [(job, nodes, st, ft), ...] for jobs AFTER head.
         """
+        now = float(self.current_time)
+
         base_by_id = super()._releases_by_id()
-
         scheduled_by_id = {
             nid: {
                 "node_id": nid,
@@ -71,285 +179,93 @@ class EASYPSAS(FCFSPSAS):
             for nid in base_by_id
         }
 
-        # FCFS already committed start<=now via allocate() -> those compute phases already exist in base queues.
-        # We only extend the plan with FCFS future reservations.
-        for job, nodes, start_time, _finish_time in sorted(fcfs_selected_list, key=lambda x: float(x[2])):
-            if float(start_time) <= self.current_time:
-                continue
-            self._append_planned_compute(job, nodes, float(start_time), scheduled_by_id)
+        def _append_planned_compute(job, selected_nodes, job_start_time):
+            sp = min(float(n["compute_speed"]) for n in selected_nodes)
+            wall = float(job["reqtime"]) / sp
+            ft = float(job_start_time) + wall
+            phase = f'compute(job={job["job_id"]})'
+            for n in selected_nodes:
+                e = scheduled_by_id[n["id"]]
+                e["queue"].append({"phase": phase, "start_time": float(job_start_time), "finish_time": float(ft)})
+                e["release_time"] = float(ft)
+            return float(ft)
 
-        return scheduled_by_id
+        # Seed head reservation into the plan copy (so later jobs don't steal those nodes)
+        head_finish = _append_planned_compute(head_job, head_nodes, float(head_start))
 
-    def _protected_start_times(self, fcfs_selected_list, head_nodes=None, head_start_time=None):
-        """
-        For each node, record the earliest future reserved start_time that must not be delayed.
-        Includes:
-          - FCFS future reservations
-          - Head job reservation (EASY rule), if provided
-        """
-        protected = {}
+        # FCFS barrier: after head, next jobs can't start before head_start (order constraint)
+        barrier = float(head_start)
 
-        for _job, nodes, start_time, _finish_time in fcfs_selected_list:
-            st = float(start_time)
-            if st <= self.current_time:
-                continue
-            for n in nodes:
-                nid = int(n["id"])
-                protected[nid] = min(protected.get(nid, math.inf), st)
-
-        if head_nodes is not None and head_start_time is not None:
-            st = float(head_start_time)
-            for n in head_nodes:
-                nid = int(n["id"])
-                protected[nid] = min(protected.get(nid, math.inf), st)
-
-        return protected
-
-    # ---------- EASY backfill ----------
-    def backfill(self, fcfs_started_jobs):
-        """
-        EASY backfill:
-        - FCFS already started runnable jobs now and reserved exactly ONE head job in selected_list.
-        - Backfill jobs behind head if they can start now and won't delay head start.
-        """
-        now = float(self.current_time)
-
-        # Find head reservation created by FCFS: first tuple with start_time > now
-        head_entry = None
-        for job, nodes, st, ft in self.selected_list:
-            if float(st) > now and job["job_id"] not in fcfs_started_jobs:
-                head_entry = (job, nodes, float(st), float(ft))
-                break
-
-        if head_entry is None:
-            return  # no head reserved => nothing to protect/backfill against
-
-        head_job, head_nodes, head_start, _head_finish = head_entry
-        head_job_id = head_job["job_id"]
-        head_node_ids = {int(n["id"]) for n in head_nodes}
-
-        # If head_start is unknown/infinite, be conservative: don't backfill
-        if math.isinf(head_start) or head_start <= now:
-            return
-
-        # Only backfill jobs BEHIND the head job in queue order
-        seen_head = False
-        for job in self.waiting_queue[:]:
-            if job["job_id"] == head_job_id:
-                seen_head = True
-                continue
-            if not seen_head:
-                continue
-
-            # Skip jobs already started by FCFS
-            if job["job_id"] in fcfs_started_jobs:
-                continue
-
+        plan = []
+        for job in jobs:
             required = int(job["res"])
-            if len(self.idle) < required:
-                continue
+            min_start_time = float(barrier)
 
-            # time window if we end up using head nodes
-            window = head_start - now
-            if window <= 0:
-                return
-
-            # Minimum per-node speed needed so finish <= head_start (since runtime uses min speed)
-            min_speed_needed = float(job["reqtime"]) / float(window)
-
-            releases_by_id = super()._releases_by_id()
-
-            # Step A: prefer NOT using head nodes at all
-            non_head_idle = [n for n in self.idle if int(n["id"]) not in head_node_ids]
-            if len(non_head_idle) >= required:
-                res = self._select_nodes_energy_aware(
-                    required_nodes=required,
-                    _candidates=non_head_idle,
-                    releases_by_id=releases_by_id,
-                    min_start_time=now,
-                )
-                if res is not None:
-                    selected, st = res
-                    if float(st) <= now:
-                        super().allocate(job, selected)
-                        # track schedule
-                        speed = min(float(n["compute_speed"]) for n in selected)
-                        ft = now + float(job["reqtime"]) / speed
-                        self.selected_list.append((job, selected, now, ft))
-                        continue
-
-            # Step B: allow using head nodes IF (all chosen nodes) are fast enough to finish before head_start
-            eligible = [n for n in self.idle if float(n["compute_speed"]) >= min_speed_needed]
-            if len(eligible) < required:
-                continue
-
-            # still prefer non-head among eligible
-            eligible_non_head = [n for n in eligible if int(n["id"]) not in head_node_ids]
-            pool = eligible_non_head if len(eligible_non_head) >= required else eligible
+            # Candidates: all partitions (same as FCFS)
+            candidates = list(self.idle) + list(self.sleeping) + list(self.computing) + list(self.switching_on)
 
             res = self._select_nodes_energy_aware(
                 required_nodes=required,
-                _candidates=pool,
-                releases_by_id=releases_by_id,
-                min_start_time=now,
+                _candidates=candidates,
+                releases_by_id=scheduled_by_id,
+                min_start_time=min_start_time,
             )
             if res is None:
-                continue
+                break
 
             selected, st = res
-            if float(st) > now:
-                continue
+            ft = _append_planned_compute(job, selected, float(st))
 
-            # Final safety check: if any head node used, must finish before head_start
-            speed = min(float(n["compute_speed"]) for n in selected)
-            finish = now + float(job["reqtime"]) / speed
-            if any(int(n["id"]) in head_node_ids for n in selected):
-                if finish > head_start:
-                    continue
+            plan.append((job, selected, float(st), float(ft)))
+            barrier = float(st)
 
-            super().allocate(job, selected)
-            self.selected_list.append((job, selected, now, finish))
+        return plan
 
-
-    # ---------- backfill selector (planned-release aware) ----------
-    def _backfill_select_nodes_energy_aware(
-        self,
-        job,
-        required_nodes: int,
-        candidates,
-        protected_starts: dict[int, float],
-        releases_by_id: dict,
-        min_start_time: float | None = None,
-        max_start_time: float | None = None,
-    ):
+    # ---------- Wake triggers from final plan ----------
+    def _emit_wake_triggers_from_plan(self, plan):
         """
-        Like _select_nodes_energy_aware but with constraint:
-          finish_time <= min(protected_starts[node_id]) across selected nodes.
-        Uses a planned releases table (releases_by_id) so it includes “currently scheduled” nodes.
+        For sleeping nodes used by any FUTURE job in the plan:
+          - compute earliest wake_time = start_time - t_on_active
+          - if wake_time <= now: emit switch_on now for those nodes
+          - else: emit call_me_later_so at wake_time (unique times)
         """
-        # filter: must exist + finite release_time
-        candidates = [
-            n for n in candidates
-            if (n["id"] in releases_by_id) and (not math.isinf(float(releases_by_id[n["id"]]["release_time"])))
-        ]
-        if len(candidates) < required_nodes:
-            return None
+        now = float(self.current_time)
+        sleeping_ids = {n["id"] for n in self.sleeping}
 
-        if min_start_time is None:
-            min_start_time = -math.inf
-        else:
-            min_start_time = float(min_start_time)
-
-        if max_start_time is not None:
-            max_start_time = float(max_start_time)
-
-        machine_by_id = {m["id"]: m for m in self.machines.machines}
-
-        node_power_data = {}
-        for node in candidates:
-            nid = int(node["id"])
-            node_release = releases_by_id[nid]
-            machine = machine_by_id[nid]
-
-            # consistent label (idle/computing) for active state
-            if node["state"] == "active" and node.get("job_id") is None:
-                state_label = "idle"
-            elif node["state"] == "active" and node.get("job_id") is not None:
-                state_label = "computing"
-            else:
-                state_label = node["state"]
-
-            base_energy_waste = 0.0
-            for q in node_release["queue"]:
-                ft = float(q["finish_time"])
-                if math.isinf(ft):
-                    # if non-compute phase is inf (shouldn't happen), treat as not usable
-                    if not _COMPUTE_RE.fullmatch(str(q["phase"])):
-                        base_energy_waste = math.inf
-                        break
+        earliest_wake_by_node = {}
+        for job, nodes, st, ft in plan:
+            st = float(st)
+            if st <= now + 1e-9:
+                continue
+            for n in nodes:
+                nid = n["id"]
+                if nid not in sleeping_ids:
                     continue
+                t_on_active = super()._transition_time(nid, "switching_on", "active")
+                wake_time = st - float(t_on_active)
+                prev = earliest_wake_by_node.get(nid)
+                if prev is None or wake_time < prev:
+                    earliest_wake_by_node[nid] = wake_time
 
-                if float(q["start_time"]) < self.current_time:
-                    duration = ft - self.current_time
-                else:
-                    duration = ft - float(q["start_time"])
+        if not earliest_wake_by_node:
+            return
 
-                if _COMPUTE_RE.fullmatch(str(q["phase"])):
-                    continue
+        immediate = [nid for nid, t in earliest_wake_by_node.items() if t <= now + 1e-9]
+        future_times = sorted({t for nid, t in earliest_wake_by_node.items() if t > now + 1e-9})
 
-                e_rate = machine["states"][q["phase"]]["power"]
-                if e_rate == "from_dvfs":
-                    dvfs_profiles = machine["dvfs_profiles"]
-                    dvfs_mode = node["dvfs_mode"]
-                    e_rate = dvfs_profiles[dvfs_mode]["power"]
+        # Immediate switch_on (same event type FCFS uses)
+        if immediate:
+            self.push_event(now, {"type": "switch_on", "nodes": immediate})
 
-                base_energy_waste += float(e_rate) * float(duration)
+            # Optional: keep partitions consistent for the rest of this schedule tick
+            def _filter_out(lst):
+                ids = set(immediate)
+                return [x for x in lst if x["id"] not in ids]
 
-            idle_power = machine["states"]["active"]["power"]
-            if idle_power == "from_dvfs":
-                dvfs_profiles = machine["dvfs_profiles"]
-                dvfs_mode = node["dvfs_mode"]
-                idle_power = dvfs_profiles[dvfs_mode]["power"]
+            self.sleeping = _filter_out(self.sleeping)
+            state_by_id = {n["id"]: n for n in self.state}
+            self.switching_on.extend([state_by_id[nid] for nid in immediate if nid in state_by_id])
 
-            node_power_data[nid] = {
-                "base": float(base_energy_waste),
-                "idle": float(idle_power),
-                "release": float(node_release["release_time"]),
-                "state_label": state_label,
-                "node": node,
-            }
-
-        releases_sorted = sorted({d["release"] for d in node_power_data.values()} | {min_start_time})
-        items = list(node_power_data.items())
-
-        for t in releases_sorted:
-            if t < min_start_time:
-                continue
-            if (max_start_time is not None) and (t >= max_start_time):
-                continue
-
-            eligible = []
-            for nid, dat in items:
-                r = dat["release"]
-                if r <= t:
-                    if dat["state_label"] in ("switching_off", "sleeping"):
-                        cost = dat["base"]
-                    else:
-                        cost = dat["base"] + dat["idle"] * (t - r)
-
-                    state = dat["state_label"]
-                    if state == "idle":
-                        state_priority = 0
-                    elif state == "computing":
-                        state_priority = 1
-                    elif state == "switching_on":
-                        state_priority = 2
-                    else:
-                        state_priority = 3
-
-                    if state == "idle":
-                        timeout_priority = -self._remaining_idle_timeout(nid)
-                    else:
-                        timeout_priority = 0
-
-                    eligible.append((nid, cost, state_priority, timeout_priority))
-
-            if len(eligible) < required_nodes:
-                continue
-
-            ranked = sorted((cost, sp, tp, nid) for (nid, cost, sp, tp) in eligible)
-
-            combo_ids = [nid for (_c, _sp, _tp, nid) in ranked[:required_nodes]]
-            selected_nodes = [node_power_data[nid]["node"] for nid in combo_ids]
-
-            # finish time check against protected starts (earliest reserved start per node)
-            compute_speed = min(float(n["compute_speed"]) for n in selected_nodes)
-            walltime = float(job["reqtime"]) / compute_speed
-            finish_time = float(t) + walltime
-
-            max_allowed_finish = min(protected_starts.get(int(n["id"]), math.inf) for n in selected_nodes)
-
-            if finish_time <= max_allowed_finish:
-                return (selected_nodes, float(t))
-
-        return None
+        # Future wake triggers: just call scheduler then (no node list), FCFS-compatible
+        for t in future_times:
+            self.push_event(float(t), {"type": "call_me_later_so"})
