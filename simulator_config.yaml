@@ -1,7 +1,7 @@
 paths:
   workload: "workloads/nasa-20-back.json"
   platform: "platforms/platform-nasa-128.json"
-  output: "EASY_V3"
+  output: "easy_v6"
 
 run:
   algorithm: "easy_psas"
