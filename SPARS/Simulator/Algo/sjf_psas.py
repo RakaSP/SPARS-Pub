@@ -1,4 +1,4 @@
-# fcfs_psas.py
+# sjf_psas.py
 import math
 import re
 from .BasePSAS import BasePSAS
@@ -7,8 +7,13 @@ _COMPUTE_RE = re.compile(r"^compute\(job=\d+\)$")
 EPS = 1e-9
 
 
-class FCFSPSAS(BasePSAS):
+class SJFPSAS(BasePSAS):
     """
+    Priority: lowest nodes (job['res']) first, then lowest reqtime.
+
+    Sorting key = (int(job["res"]), float(job["reqtime"])) and Python sort is stable
+    so ties keep original queue order.
+
     Node selection is energy-aware:
       Minimize ( sum(power) / min(compute_speed) ).
     Tie-breaks:
@@ -20,17 +25,22 @@ class FCFSPSAS(BasePSAS):
         super().__init__(machines, jobs_manager, start_time, timeout)
         self.selected_list = []
 
+    # ---------- helpers ----------
+    @staticmethod
+    def _job_key(job):
+        return (int(job["res"]), float(job["reqtime"]))
+
     # ---------- public ----------
     def schedule(self):
         super().prep_schedule()
         now = float(self.current_time)
 
-        # 1) current FCFS commit-only (no waking)
-        started_now = self._current_fcfs_commit()
+        # 1) current SJF commit-only (no waking)
+        started_now = self._current_sjf_commit()
 
-        # 2) future FCFS plan-only
+        # 2) future SJF plan-only
         remaining = [j for j in self.waiting_queue if j["job_id"] not in started_now]
-        future_plan = self._future_fcfs_plan(remaining, barrier=now)
+        future_plan = self._future_sjf_plan(remaining, barrier=now)
 
         self.selected_list = list(future_plan)
 
@@ -42,17 +52,17 @@ class FCFSPSAS(BasePSAS):
         super().build_callbacks()
         return self.events
 
-    # ---------------- current FCFS (commit-only) ----------------
-    def _current_fcfs_commit(self):
+    # ---------------- current SJF (commit-only) ----------------
+    def _current_sjf_commit(self):
         now = float(self.current_time)
         started_now = set()
 
-        for job in self.waiting_queue[:]:
+        for job in sorted(self.waiting_queue[:], key=self._job_key):
             req = int(job["res"])
             if req <= 0:
                 continue
 
-            # FCFS: if head cannot start now, stop
+            # keep your current behavior (stop when first in this priority order can't start)
             if len(self.idle) < req:
                 break
 
@@ -74,8 +84,8 @@ class FCFSPSAS(BasePSAS):
 
         return started_now
 
-    # ---------------- future FCFS (plan-only) ----------------
-    def _future_fcfs_plan(self, jobs, barrier):
+    # ---------------- future SJF (plan-only) ----------------
+    def _future_sjf_plan(self, jobs, barrier):
         now = float(self.current_time)
 
         base_by_id = super()._releases_by_id()
@@ -95,16 +105,24 @@ class FCFSPSAS(BasePSAS):
             phase = f'compute(job={job["job_id"]})'
             for n in selected_nodes:
                 e = scheduled_by_id[n["id"]]
-                e["queue"].append({"phase": phase, "start_time": float(job_start_time), "finish_time": float(ft)})
+                e["queue"].append(
+                    {"phase": phase, "start_time": float(job_start_time), "finish_time": float(ft)}
+                )
                 e["release_time"] = float(ft)
             return float(ft)
 
-        candidates = list(self.idle) + list(self.sleeping) + list(self.computing) + list(self.switching_on) + list(self.switching_off)
+        candidates = (
+            list(self.idle)
+            + list(self.sleeping)
+            + list(self.computing)
+            + list(self.switching_on)
+            + list(self.switching_off)
+        )
 
         plan = []
         barrier = float(barrier)
 
-        for job in jobs:
+        for job in sorted(jobs, key=self._job_key):
             req = int(job["res"])
             if req <= 0:
                 continue
@@ -122,7 +140,6 @@ class FCFSPSAS(BasePSAS):
             ft = _append_planned_compute(job, nodes, float(st))
             plan.append((job, nodes, float(st), float(ft)))
 
-            # FCFS ordering barrier
             barrier = float(st)
 
         return plan
@@ -131,7 +148,7 @@ class FCFSPSAS(BasePSAS):
     def _emit_wake_triggers_from_plan(self, plan):
         now = float(self.current_time)
         if self.current_time == 155047:
-            print('x')
+            print("x")
         sleeping_ids = {n["id"] for n in self.sleeping}
 
         earliest_wake = {}
@@ -158,7 +175,6 @@ class FCFSPSAS(BasePSAS):
         if immediate:
             self.push_event(now, {"type": "switch_on", "nodes": immediate})
 
-            # keep partitions consistent this tick
             imm_set = set(immediate)
             self.sleeping = [n for n in self.sleeping if n["id"] not in imm_set]
             state_by_id = {n["id"]: n for n in self.state}
@@ -183,7 +199,8 @@ class FCFSPSAS(BasePSAS):
             releases_by_id = super()._releases_by_id()
 
         _candidates = [
-            n for n in _candidates
+            n
+            for n in _candidates
             if (n["id"] in releases_by_id) and (not math.isinf(float(releases_by_id[n["id"]]["release_time"])))
         ]
         if len(_candidates) < required_nodes:

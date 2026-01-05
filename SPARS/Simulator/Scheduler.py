@@ -6,7 +6,7 @@ from SPARS.Simulator.Algo.fcfs_psus import FCFSPSUS
 from SPARS.Simulator.Algo.easy_psus import EASYPSUS
 from SPARS.Simulator.Algo.fcfs_psas import FCFSPSAS
 from SPARS.Simulator.Algo.easy_psas import EASYPSAS
-from SPARS.Simulator.Algo.snf_psas import SNFPSAS
+from SPARS.Simulator.Algo.sjf_psas import SJFPSAS
 
 ALGO_MAP = {
     'fcfs': FCFS,
@@ -17,7 +17,7 @@ ALGO_MAP = {
     'easy_psus': EASYPSUS,
     'fcfs_psas': FCFSPSAS,
     'easy_psas': EASYPSAS,
-    'snf_psas': SNFPSAS
+    'sjf_psas': SJFPSAS
 }
 
 
