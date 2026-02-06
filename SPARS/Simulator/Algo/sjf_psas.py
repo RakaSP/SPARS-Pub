@@ -40,6 +40,7 @@ class SJFPSAS(BasePSAS):
 
         # 2) future SJF plan-only
         remaining = [j for j in self.waiting_queue if j["job_id"] not in started_now]
+        
         future_plan = self._future_sjf_plan(remaining, barrier=now)
 
         self.selected_list = list(future_plan)
@@ -131,7 +132,7 @@ class SJFPSAS(BasePSAS):
                 required_nodes=req,
                 _candidates=candidates,
                 releases_by_id=scheduled_by_id,
-                min_start_time=barrier,
+                min_start_time=now,
             )
             if res is None:
                 break

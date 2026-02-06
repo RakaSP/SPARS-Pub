@@ -1,12 +1,12 @@
 paths:
-  workload: "workloads/nasa-20-back.json"
+  workload: "workloads/300.json"
   platform: "platforms/platform-nasa-128.json"
-  output: "sjf_v2"
+  output: "baseline"
 
 run:
   algorithm: "sjf_psas"
   overrun_policy: "terminate"
-  timeout: 300 # Num (Int) or Null
+  timeout: Null # Num (Int) or Null
   # can be integer epoch, "now", or "YYYY-MM-DD HH:MM:SS"
   start_time: 0
 
