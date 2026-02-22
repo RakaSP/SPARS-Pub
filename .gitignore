@@ -5,6 +5,8 @@ requirements_linux.txt
 multi_runner.py
 plotter.py
 simulator.log
+subset_workload.py
+swf_to_json.py
 # benchmark_execution_time.py
 # command_list.txt
 # batsimpy_data_rtfv1.py

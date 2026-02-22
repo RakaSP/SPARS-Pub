@@ -24,7 +24,6 @@ class Reward:
 
     @staticmethod
     def _sum_wait(logs: list[Dict[str, Any]], time) -> float:
-        # Robust to missing keys/None
         total = 0.0
         for log in logs:
             sub = log["subtime"]

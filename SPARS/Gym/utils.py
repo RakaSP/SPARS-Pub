@@ -1,8 +1,3 @@
-# SPARS/Gym/utils.py
-# Minimal shim with ZERO defaults/registries.
-# Your config/bootstrap must set these names BEFORE the env is imported,
-# e.g., in config.py: from SPARS.Gym import utils as G; G.feature_extraction = ...
-
 from typing import Any, Dict, Union, Tuple, Callable
 import importlib
 import inspect

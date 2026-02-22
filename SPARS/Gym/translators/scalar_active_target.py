@@ -25,7 +25,7 @@ def action_translator(num_nodes, state, logits, current_time):
     delta = current_active - num_active_nodes
 
     switch_on, switch_off = [], []
-    delta = int(delta)  # NOTE: floors; consider round() if desired.
+    delta = int(delta)
 
     if delta > 0:
         # Need to reduce active nodes: switch OFF idle active nodes

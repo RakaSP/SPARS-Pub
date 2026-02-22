@@ -534,12 +534,6 @@ def _instantiate_with_flexible_kwargs(cls, params: dict, *, positional_first: st
 def _build_agent(rl_cfg: dict, device: str):
     """
     Build agent and optimizer ENTIRELY from cfg['rl']['agent'] with flexible params.
-    - No hard-coded keys like obs_dim/act_dim are injected.
-    - 'device' handling:
-        * if agent.params.device == "auto" -> resolve with _choose_device
-        * if agent.params.device missing   -> set to resolved device
-        * if agent ctor doesn't accept 'device', it's filtered; if it's an nn.Module,
-          we still move it to the device afterward.
     """
     agent_cfg = rl_cfg.get("agent") or {}
 

@@ -5,7 +5,6 @@ import gymnasium as gym
 from SPARS.Logger import log_info, log_trace
 import torch as T
 
-# import your real Simulator and RJMS
 from SPARS.Gym.utils import Reward, action_translator
 
 from SPARS.Gym.utils import feature_extraction
