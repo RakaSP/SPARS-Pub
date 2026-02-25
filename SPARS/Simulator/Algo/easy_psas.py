@@ -90,8 +90,7 @@ class EASYPSAS(FCFSPSAS):
     # UNCHANGED
     def _current_easy_commit(self, started_now, head_job_id, head_start_time, head_reserved_ids):
         now = float(self.current_time)
-        if now == 79236:
-            print('x')
+
         seen_head = False
 
         for job in self.waiting_queue:

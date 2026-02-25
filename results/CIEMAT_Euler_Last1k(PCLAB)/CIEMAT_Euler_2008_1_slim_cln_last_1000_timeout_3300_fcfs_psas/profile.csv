@@ -1,0 +1,175 @@
+function,ncalls,tottime_s,cumtime_s
+<method 'add' of 'set' objects> (~:0),1000,0.000083,0.000083
+<method 'get' of 'dict' objects> (~:0),56847583,2.098402,2.098402
+<method 'setdefault' of 'dict' objects> (~:0),224,0.000017,0.000017
+<method 'items' of 'dict' objects> (~:0),444808,0.030854,0.030854
+<method 'values' of 'dict' objects> (~:0),439041,0.028230,0.028230
+<method 'append' of 'list' objects> (~:0),6566530,0.319489,0.319489
+<method 'insert' of 'list' objects> (~:0),1683,0.000237,0.000237
+<method 'extend' of 'list' objects> (~:0),3257,0.000364,0.000364
+<method 'pop' of 'list' objects> (~:0),2301,0.000398,0.000398
+<method 'sort' of 'list' objects> (~:0),782,0.000144,0.000144
+<method 'join' of 'str' objects> (~:0),3057,0.000757,0.000757
+<method 'find' of 'str' objects> (~:0),4,0.000001,0.000001
+<method 'rfind' of 'str' objects> (~:0),12,0.000002,0.000002
+<built-in method sys._getframe> (~:0),4,0.000001,0.000001
+<built-in method builtins.any> (~:0),14192,0.002423,0.004281
+<built-in method builtins.getattr> (~:0),1,0.000000,0.000000
+<built-in method builtins.hasattr> (~:0),443336,0.020593,0.020593
+<built-in method builtins.isinstance> (~:0),4008,0.000576,0.000576
+<built-in method builtins.len> (~:0),3179748,0.138904,0.138904
+<built-in method builtins.min> (~:0),444255,0.197686,0.392632
+<built-in method builtins.next> (~:0),7622,0.001259,0.002789
+<built-in method builtins.round> (~:0),4000,0.001511,0.001511
+<built-in method builtins.sorted> (~:0),875788,0.575454,0.878806
+<built-in method builtins.sum> (~:0),11505,0.010741,0.040068
+basename (<frozen posixpath>:140),4,0.000005,0.000008
+splitext (<frozen posixpath>:117),4,0.000003,0.000008
+normcase (<frozen posixpath>:52),12,0.000004,0.000004
+_get_sep (<frozen posixpath>:41),4,0.000001,0.000002
+_splitext (<frozen genericpath>:121),4,0.000003,0.000005
+<method 'acquire' of '_thread.RLock' objects> (~:0),8,0.000002,0.000002
+<method 'release' of '_thread.RLock' objects> (~:0),8,0.000001,0.000001
+<built-in method _thread.get_ident> (~:0),8,0.000001,0.000001
+<built-in method posix.getpid> (~:0),4,0.000001,0.000001
+<built-in method posix.fspath> (~:0),20,0.000001,0.000001
+<method 'write' of '_io.TextIOWrapper' objects> (~:0),4,0.000016,0.000016
+<method 'flush' of '_io.TextIOWrapper' objects> (~:0),4,0.000001,0.000001
+<built-in method time.time> (~:0),4,0.000001,0.000001
+<method 'fullmatch' of 're.Pattern' objects> (~:0),283122218,44.149492,44.149492
+<built-in method math.isinf> (~:0),28030943,0.776937,0.776937
+<built-in method _bisect.bisect_left> (~:0),1933,0.001984,0.002901
+format (/usr/lib/python3.11/logging/__init__.py:674),4,0.000004,0.000017
+findCaller (/usr/lib/python3.11/logging/__init__.py:1561),4,0.000007,0.000022
+_log (/usr/lib/python3.11/logging/__init__.py:1610),4,0.000006,0.000152
+callHandlers (/usr/lib/python3.11/logging/__init__.py:1690),4,0.000004,0.000064
+__init__ (/usr/lib/python3.11/logging/__init__.py:292),4,0.000026,0.000053
+push_event (/home/raka/SPARS-Pub/SPARS/Simulator/Simulator.py:107),2057,0.002437,0.005720
+print_states_dur (/home/raka/SPARS-Pub/SPARS/Simulator/Monitor.py:98),1,0.000219,0.000290
+proceed (/home/raka/SPARS-Pub/SPARS/Simulator/Simulator.py:170),2301,0.030491,0.296876
+remove_job_from_waiting_queue (/home/raka/SPARS-Pub/SPARS/Simulator/JobsManager.py:21),1000,0.000985,0.001046
+advance (/home/raka/SPARS-Pub/SPARS/Simulator/Simulator.py:297),1553,0.009004,159.457907
+switch_off (/home/raka/SPARS-Pub/SPARS/Simulator/PlatformControl.py:121),4,0.000159,0.000752
+schedule (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:24),2301,0.055289,159.141859
+build_callbacks (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:297),2301,0.043047,0.068036
+_append_planned_compute (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:94),435740,0.746104,1.203530
+_build_partitions (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:484),2301,0.051397,0.068112
+_future_fcfs_plan (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:82),2301,1.037020,157.874308
+_current_fcfs_commit (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:50),2301,0.006707,0.055497
+_ensure_transition_index (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:138),443328,0.063083,0.083708
+allocate (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:318),1000,0.006938,0.018164
+_rebuild_next_releases_global (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:206),2301,0.308265,0.775129
+_rebuild_timeout_list (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:398),4602,0.010001,0.074505
+_mark_timed_out_nodes (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:373),2301,0.006845,0.034980
+update_energy (/home/raka/SPARS-Pub/SPARS/Simulator/Monitor.py:176),2301,0.053762,0.059936
+timeout_policy (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:424),2301,0.007805,0.053868
+record (/home/raka/SPARS-Pub/SPARS/Simulator/Monitor.py:136),4602,0.004887,0.230936
+_emit_wake_triggers_from_plan (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:134),2301,0.097024,0.098159
+_select_nodes_energy_aware (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:183),436740,100.717549,155.571088
+switch_on (/home/raka/SPARS-Pub/SPARS/Simulator/PlatformControl.py:160),7,0.000235,0.000895
+update_node_state (/home/raka/SPARS-Pub/SPARS/Simulator/Monitor.py:227),2301,0.057826,0.133933
+compute (/home/raka/SPARS-Pub/SPARS/Simulator/PlatformControl.py:45),1000,0.002595,0.012222
+_update_node_state (/home/raka/SPARS-Pub/SPARS/Simulator/Machine.py:64),448,0.000280,0.000337
+<genexpr> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:95),2027706,0.191316,0.191316
+<genexpr> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:344),5900,0.000680,0.000680
+<genexpr> (/home/raka/SPARS-Pub/SPARS/Simulator/Monitor.py:268),13202,0.006512,0.006512
+<genexpr> (/home/raka/SPARS-Pub/SPARS/Simulator/Monitor.py:270),130360,0.010777,0.010777
+<genexpr> (/home/raka/SPARS-Pub/SPARS/Simulator/PlatformControl.py:61),5900,0.002950,0.002950
+_recalculate_release_at (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:109),147264,0.040286,0.046733
+_get_nodes_by_ids (/home/raka/SPARS-Pub/SPARS/Simulator/Machine.py:138),2022,0.001618,0.007662
+<listcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:88),147264,0.017668,0.017668
+<listcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:157),7,0.000010,0.000010
+<setcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:158),7,0.000007,0.000007
+<genexpr> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:279),2834216,0.301634,0.301634
+<listcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:288),436740,0.109381,0.109381
+<genexpr> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:86),1310,0.000163,0.000163
+set_time (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:93),2301,0.000514,0.000514
+<genexpr> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:264),12592,0.001017,0.001017
+<genexpr> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:271),12704,0.000943,0.000943
+<genexpr> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:274),18944,0.001398,0.001398
+<genexpr> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:283),2976,0.000235,0.000235
+<dictcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Monitor.py:234),2301,0.007320,0.007320
+<dictcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Monitor.py:235),2301,0.006605,0.006605
+<dictcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Monitor.py:236),2301,0.006531,0.006531
+<genexpr> (/home/raka/SPARS-Pub/SPARS/Simulator/Monitor.py:263),2765,0.004157,0.004157
+<genexpr> (/home/raka/SPARS-Pub/SPARS/Simulator/Monitor.py:264),3789,0.003855,0.003855
+<genexpr> (/home/raka/SPARS-Pub/SPARS/Simulator/Monitor.py:266),8653,0.004026,0.004026
+<listcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:34),2301,0.018385,0.018385
+<setcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:137),2301,0.000314,0.000314
+<listcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:165),7,0.000010,0.000010
+<dictcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:166),7,0.000018,0.000018
+<listcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:167),7,0.000007,0.000007
+<dictcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:196),436740,1.114874,1.114874
+<setcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:243),436740,1.161305,1.161305
+<dictcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:98),17503,0.041283,0.041283
+_releases_by_id (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:97),17503,0.004943,0.046226
+<listcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:292),10901,0.000874,0.000874
+<listcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:326),1000,0.000297,0.000297
+<listcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:328),1000,0.000275,0.000275
+<listcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:336),4000,0.000841,0.000841
+_filter_out (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:335),4000,0.001138,0.001979
+<listcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:422),4602,0.002801,0.002801
+<dictcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:431),2301,0.006118,0.006118
+<listcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:432),2301,0.000440,0.000440
+<listcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Machine.py:65),448,0.000056,0.000056
+<listcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Machine.py:139),2022,0.005819,0.005819
+release (/home/raka/SPARS-Pub/SPARS/Simulator/Machine.py:127),1000,0.001356,0.005225
+switch_on (/home/raka/SPARS-Pub/SPARS/Simulator/Machine.py:86),7,0.000022,0.000149
+turn_off (/home/raka/SPARS-Pub/SPARS/Simulator/Machine.py:102),4,0.000019,0.000126
+switch_off (/home/raka/SPARS-Pub/SPARS/Simulator/Machine.py:95),4,0.000020,0.000128
+_remaining_idle_timeout (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:173),111162,0.039847,0.039847
+add_job_to_waiting_queue (/home/raka/SPARS-Pub/SPARS/Simulator/JobsManager.py:18),1000,0.000201,0.000253
+allocate (/home/raka/SPARS-Pub/SPARS/Simulator/Machine.py:111),1000,0.001117,0.004777
+<listcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:187),436740,4.329183,5.099664
+_append_phase_abs (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:123),5476,0.002041,0.002365
+<lambda> (/home/raka/SPARS-Pub/SPARS/Simulator/Simulator.py:127),12672,0.000917,0.000917
+start_simulator (/home/raka/SPARS-Pub/SPARS/Simulator/Simulator.py:157),1,0.000000,0.000000
+on_finish (/home/raka/SPARS-Pub/SPARS/Simulator/JobsManager.py:12),1,0.000001,0.000029
+<dictcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psas.py:85),2301,0.043381,0.061049
+_wake_lead_time (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:172),768,0.000246,0.001340
+<setcomp> (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:407),4602,0.042296,0.061384
+on_finish (/home/raka/SPARS-Pub/SPARS/Simulator/Simulator.py:161),1,0.000003,0.000531
+_trace (/home/raka/SPARS-Pub/SPARS/Logger.py:10),5486,0.001975,0.003084
+<lambda> (/home/raka/SPARS-Pub/SPARS/Simulator/Simulator.py:199),3057,0.001501,0.001718
+release (/home/raka/SPARS-Pub/SPARS/Simulator/PlatformControl.py:101),1000,0.000475,0.005699
+turn_on (/home/raka/SPARS-Pub/SPARS/Simulator/PlatformControl.py:113),7,0.000005,0.000160
+turn_off (/home/raka/SPARS-Pub/SPARS/Simulator/PlatformControl.py:117),4,0.000003,0.000133
+turn_on (/home/raka/SPARS-Pub/SPARS/Simulator/Machine.py:91),7,0.000020,0.000148
+_transition_time (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:166),443328,0.191239,0.332514
+validate_duplication (/home/raka/SPARS-Pub/SPARS/Simulator/PlatformControl.py:36),1022,0.000765,0.000908
+prep_schedule (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:505),2301,0.003681,0.918318
+print_energy (/home/raka/SPARS-Pub/SPARS/Simulator/Monitor.py:79),1,0.000050,0.000108
+update_node_state_duration (/home/raka/SPARS-Pub/SPARS/Simulator/Monitor.py:207),2301,0.031921,0.031921
+<genexpr> (/home/raka/SPARS-Pub/SPARS/Simulator/PlatformControl.py:132),224,0.000275,0.000396
+<genexpr> (/home/raka/SPARS-Pub/SPARS/Simulator/PlatformControl.py:171),224,0.000287,0.000412
+push_event (/home/raka/SPARS-Pub/SPARS/Simulator/Algo/BasePSAS.py:85),1046,0.001412,0.002121
+on_finish (/home/raka/SPARS-Pub/SPARS/Simulator/Monitor.py:120),1,0.000018,0.000418
+schedule (/home/raka/SPARS-Pub/SPARS/Simulator/Scheduler.py:34),2301,0.002667,159.145040
+log_info (/home/raka/SPARS-Pub/SPARS/Logger.py:47),4,0.000002,0.000160
+_schedule_next_rl_tick (/home/raka/SPARS-Pub/SPARS/Simulator/Simulator.py:150),2301,0.000312,0.000312
+current_process (/usr/lib/python3.11/multiprocessing/process.py:37),4,0.000001,0.000001
+name (/usr/lib/python3.11/multiprocessing/process.py:189),4,0.000001,0.000001
+isEnabledFor (/usr/lib/python3.11/logging/__init__.py:1734),5490,0.001109,0.001109
+name (/usr/lib/python3.11/threading.py:1152),4,0.000001,0.000001
+usesTime (/usr/lib/python3.11/logging/__init__.py:432),4,0.000002,0.000003
+current_thread (/usr/lib/python3.11/threading.py:1453),4,0.000002,0.000002
+format (/usr/lib/python3.11/logging/__init__.py:447),4,0.000001,0.000005
+handle (/usr/lib/python3.11/logging/__init__.py:1636),4,0.000003,0.000068
+info (/usr/lib/python3.11/logging/__init__.py:1479),4,0.000005,0.000158
+makeRecord (/usr/lib/python3.11/logging/__init__.py:1595),4,0.000004,0.000057
+<lambda> (/usr/lib/python3.11/logging/__init__.py:164),4,0.000003,0.000004
+usesTime (/usr/lib/python3.11/logging/__init__.py:652),4,0.000002,0.000005
+formatMessage (/usr/lib/python3.11/logging/__init__.py:658),4,0.000001,0.000007
+_is_internal_frame (/usr/lib/python3.11/logging/__init__.py:194),12,0.000007,0.000011
+getMessage (/usr/lib/python3.11/logging/__init__.py:368),4,0.000001,0.000001
+_format (/usr/lib/python3.11/logging/__init__.py:440),4,0.000004,0.000004
+acquire (/usr/lib/python3.11/logging/__init__.py:922),8,0.000003,0.000005
+release (/usr/lib/python3.11/logging/__init__.py:929),8,0.000002,0.000003
+format (/usr/lib/python3.11/logging/__init__.py:942),4,0.000002,0.000019
+getLevelName (/usr/lib/python3.11/logging/__init__.py:123),4,0.000001,0.000002
+filter (/usr/lib/python3.11/logging/__init__.py:815),8,0.000002,0.000002
+handle (/usr/lib/python3.11/logging/__init__.py:965),4,0.000005,0.000060
+emit (/usr/lib/python3.11/logging/__init__.py:1098),4,0.000006,0.000050
+flush (/usr/lib/python3.11/logging/__init__.py:1087),4,0.000005,0.000010
+log_trace (/home/raka/SPARS-Pub/SPARS/Logger.py:43),5486,0.003499,0.006582
+<method 'disable' of '_lsprof.Profiler' objects> (~:0),1,0.000000,0.000000

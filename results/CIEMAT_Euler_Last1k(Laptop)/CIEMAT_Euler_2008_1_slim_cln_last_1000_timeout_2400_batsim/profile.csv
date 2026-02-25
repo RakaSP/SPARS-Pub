@@ -1,0 +1,300 @@
+function,ncalls,tottime_s,cumtime_s
+on_host_state_changed (new_monitors.py:57),10488,0.007982,0.015893
+__get_key_from_state (new_monitors.py:65),10488,0.006846,0.006846
+schedule (easy_backfilling.py:14),4625,0.070268,40.721366
+<lambda> (easy_backfilling.py:31),276416,0.021645,0.021645
+<listcomp> (easy_backfilling.py:40),4319,0.022157,0.027661
+<listcomp> (easy_backfilling.py:48),724635,0.228355,0.287781
+<listcomp> (easy_backfilling.py:52),242,0.000206,0.000231
+<listcomp> (easy_backfilling.py:57),8,0.000018,0.000019
+backfill (easy_backfilling.py:21),4319,0.707696,38.021412
+record_backfill (easy_backfilling.py:61),250,0.001008,0.001257
+<listcomp> (fcfs.py:19),750,0.001170,0.001601
+schedule (fcfs.py:10),4625,0.027798,2.336853
+setup_callback (timeout_policy.py:28),4900,0.005983,0.055441
+callback (timeout_policy.py:32),4900,0.023295,0.119874
+_rm_socket (context.py:283),1,0.000007,0.000016
+_should_collect_from_parameters (typing_extensions.py:173),2,0.000001,0.000001
+get_origin (typing_extensions.py:1529),2,0.000003,0.000003
+__del__ (socket.py:184),1,0.000002,0.000002
+close (socket.py:245),1,0.000047,0.000063
+send (socket.py:623),2486,0.147519,0.147519
+_deserialize (socket.py:808),2485,0.003932,0.450529
+send_json (socket.py:992),2486,0.018712,0.257929
+<lambda> (socket.py:1032),2485,0.013636,0.446597
+recv_json (socket.py:1011),2485,2.326024,2.776554
+dumps (jsonapi.py:20),2486,0.011802,0.091697
+loads (jsonapi.py:28),2485,0.016599,0.432961
+_has_generic_or_protocol_as_origin (typing_extensions.py:3389),1,0.000009,0.000010
+_is_unpacked_typevartuple (typing_extensions.py:3411),2,0.000003,0.000006
+_collect_type_vars (typing_extensions.py:3424),1,0.000006,0.000023
+__init__ (protocol.py:571),929,0.003369,0.005096
+__init__ (protocol.py:651),1,0.000002,0.000004
+__init__ (protocol.py:729),1000,0.005611,0.089740
+_get_data_dict (protocol.py:745),1000,0.003204,0.018837
+__init__ (protocol.py:776),4900,0.008844,0.013168
+_get_data_dict (protocol.py:785),929,0.001385,0.001385
+__init__ (protocol.py:933),26,0.000136,0.001080
+add_resource (protocol.py:946),318,0.000473,0.010922
+_get_data_dict (protocol.py:954),26,0.000062,0.000431
+__init__ (protocol.py:1022),2485,0.028289,0.040501
+__call__ (protocol.py:1034),10399,0.059731,0.274698
+is_connected (protocol.py:1069),4971,0.005524,0.005524
+close (protocol.py:1086),1,0.000011,0.000076
+send (protocol.py:1092),2486,0.017040,0.343758
+recv (protocol.py:1109),2485,0.015303,2.834304
+update_info (monitors.py:146),2000,0.037375,0.276874
+update_complete_info (monitors.py:166),1000,0.012572,0.111861
+on_simulation_ends (monitors.py:249),1,0.000011,0.000018
+on_job_submitted (monitors.py:258),1000,0.002291,0.002291
+on_job_completed (monitors.py:264),1000,0.015289,0.097151
+on_simulation_ends (monitors.py:365),2,0.000082,0.001776
+on_host_state_changed (monitors.py:370),20976,0.010436,0.218764
+update_info (monitors.py:377),21104,0.137514,0.209959
+on_simulation_ends (monitors.py:485),1,0.000013,0.000015
+on_host_state_changed (monitors.py:550),10488,0.028516,0.041079
+__get_key_from_state (monitors.py:566),10488,0.004983,0.004983
+on_job_started (monitors.py:738),1000,0.001542,0.227882
+on_job_completed (monitors.py:741),1000,0.001271,0.232861
+on_host_state_changed (monitors.py:744),10488,0.010928,2.450256
+update_info (monitors.py:747),12488,1.208920,2.897258
+__new__ (procset.py:40),58536,0.034725,0.055479
+__format__ (procset.py:64),1698,0.004404,0.006072
+__len__ (procset.py:72),3396,0.001083,0.001083
+__eq__ (procset.py:88),30633,0.003204,0.003204
+__lt__ (procset.py:91),43920,0.003121,0.003121
+__gt__ (procset.py:96),144945,0.009517,0.009517
+__str__ (protocol.py:44),31664,0.013255,0.033748
+__init__ (procset.py:109),5370,0.040026,0.418094
+<genexpr> (procset.py:150),2724,0.001778,0.002741
+<genexpr> (procset.py:154),2724,0.005162,0.012183
+from_str (procset.py:125),1026,0.005211,0.068118
+__str__ (procset.py:161),1026,0.001048,0.016002
+<genexpr> (procset.py:173),2724,0.000957,0.008175
+__format__ (procset.py:164),1026,0.003814,0.013411
+__iter__ (procset.py:180),6270,0.003797,0.003797
+<genexpr> (procset.py:246),5448,0.001400,0.003781
+__len__ (procset.py:244),2052,0.001835,0.007215
+_flatten (procset.py:328),140886,0.034206,0.117528
+_merge_core (procset.py:338),92352,0.104841,0.309435
+_merge (procset.py:370),57156,0.042899,0.382022
+update (procset.py:521),318,0.000537,0.004491
+_as_procint (procset.py:667),43284,0.037397,0.058909
+_as_itvs (procset.py:681),43920,0.020403,0.083322
+__init__ (simulator.py:74),276416,0.070100,0.070100
+<listcomp> (simulator.py:147),22207,0.623089,1.467989
+queue (simulator.py:144),22207,0.012480,1.480469
+<genexpr> (simulator.py:156),546764,0.637264,0.958431
+agenda (simulator.py:149),280735,0.781691,2.394109
+platform (simulator.py:169),775163,0.092318,0.092318
+is_running (simulator.py:174),22837,0.005231,0.005231
+current_time (simulator.py:179),1156864,0.261054,0.426877
+close (simulator.py:281),1,0.000030,0.002021
+proceed_time (simulator.py:291),2485,0.011828,25.225743
+set_callback (simulator.py:356),4900,0.012035,0.047819
+<genexpr> (simulator.py:414),2000,0.013022,0.025392
+allocate (simulator.py:383),1000,0.011422,1.912579
+switch_on (simulator.py:491),140,0.000459,0.044850
+switch_off (simulator.py:517),204,0.000740,0.069726
+__dispatch_event (simulator.py:572),19733,0.060607,21.398475
+<listcomp> (simulator.py:597),4510,0.120200,0.346165
+<listcomp> (simulator.py:602),2540,0.005095,0.019088
+__start_runnable_jobs (simulator.py:585),4511,0.040317,2.235324
+__goto_next_batsim_event (simulator.py:627),2485,0.013828,25.212345
+__close_simulator (simulator.py:636),1,0.000019,0.000076
+<genexpr> (simulator.py:647),8872,0.003308,0.003566
+__set_batsim_call_me_later (simulator.py:643),4900,0.011855,0.032078
+get_old_request (simulator.py:652),344,0.000434,0.000653
+__set_batsim_host_pstate (simulator.py:650),344,0.000866,0.014207
+__handle_batsim_events (simulator.py:669),2485,0.032334,24.578472
+__send_requests (simulator.py:679),2485,0.018819,0.400225
+__on_batsim_simulation_ends (simulator.py:688),1,0.000028,0.009538
+__on_batsim_host_state_changed (simulator.py:696),26,0.001466,0.304858
+__on_batsim_requested_call (simulator.py:735),929,0.013169,0.138476
+__on_batsim_job_submitted (simulator.py:742),1000,0.006601,8.683262
+<genexpr> (simulator.py:751),2000,0.021295,0.039447
+__on_batsim_job_completed (simulator.py:748),1000,0.024863,12.567991
+__on_batsim_notify (simulator.py:770),1,0.000004,0.000004
+__str__ (protocol.py:64),1955,0.003114,0.007148
+__init__ (protocol.py:95),5926,0.006061,0.006571
+timestamp (protocol.py:100),6183,0.001864,0.001864
+type (protocol.py:105),1955,0.000595,0.000595
+_get_extra_params_dict (protocol.py:119),1955,0.000353,0.000353
+to_json (protocol.py:127),1955,0.012533,0.042958
+__init__ (protocol.py:156),2957,0.004815,0.005168
+timestamp (protocol.py:161),8871,0.001711,0.001711
+type (protocol.py:166),8871,0.001250,0.001250
+<genexpr> (protocol.py:188),9883,0.007230,0.009395
+<lambda> (protocol.py:194),4912,0.002016,0.002565
+__init__ (protocol.py:184),4971,0.015869,0.046671
+now (protocol.py:196),4971,0.002147,0.002147
+events (protocol.py:201),4971,0.003104,0.003104
+<listcomp> (protocol.py:214),2486,0.002987,0.054081
+to_json (protocol.py:206),2486,0.008737,0.064951
+__init__ (protocol.py:232),1,0.000011,0.000017
+notify_type (protocol.py:242),1,0.000000,0.000000
+__init__ (protocol.py:263),1000,0.013116,0.093567
+job_id (protocol.py:270),61200,0.004223,0.004223
+job_state (protocol.py:275),1000,0.000322,0.000322
+__init__ (protocol.py:301),26,0.000298,0.002397
+resources (protocol.py:306),26,0.000006,0.000006
+state (protocol.py:311),344,0.000069,0.000069
+json_to_profile (protocol.py:378),1000,0.002626,0.007054
+__init__ (protocol.py:519),1000,0.010956,0.030315
+job (protocol.py:536),3000,0.000476,0.000476
+name (jobs.py:35),3000,0.002866,0.002866
+__init__ (jobs.py:158),1000,0.003143,0.004429
+__init__ (jobs.py:416),1000,0.005464,0.009283
+id (jobs.py:463),4407053,0.350096,0.350096
+name (jobs.py:468),3000,0.003826,0.006222
+workload (jobs.py:473),3000,0.001842,0.002772
+subtime (jobs.py:478),46250,0.004615,0.004615
+storage_mapping (jobs.py:483),2000,0.000686,0.000686
+res (jobs.py:488),25355,0.008678,0.008678
+profile (jobs.py:493),5000,0.000908,0.000908
+walltime (jobs.py:498),568168,0.063914,0.063914
+state (jobs.py:508),10000,0.001763,0.001763
+allocation (jobs.py:513),14080,0.006610,0.006610
+is_running (jobs.py:521),274382,0.075506,0.075506
+is_runnable (jobs.py:526),787360,0.226337,0.226337
+is_submitted (jobs.py:531),3929710,0.845453,0.845453
+start_time (jobs.py:551),674708,0.066601,0.066601
+stop_time (jobs.py:556),73000,0.006576,0.006576
+waiting_time (jobs.py:561),42000,0.023246,0.033970
+runtime (jobs.py:569),36000,0.028807,0.048607
+stretch (jobs.py:580),5000,0.005816,0.014536
+turnaround_time (jobs.py:591),13000,0.011213,0.065880
+per_processor_slowdown (jobs.py:599),1000,0.002593,0.015130
+slowdown (jobs.py:607),3000,0.004483,0.047237
+_allocate (jobs.py:615),1000,0.004642,0.012108
+_submit (jobs.py:682),1000,0.003096,0.003377
+_start (jobs.py:704),1000,0.002490,0.003131
+_terminate (jobs.py:728),1000,0.005316,0.006621
+id (resources.py:95),42896,0.004877,0.004877
+watt_idle (resources.py:100),187184,0.016524,0.016524
+watt_full (resources.py:105),1432384,0.123527,0.123527
+type (resources.py:110),4944,0.000568,0.000568
+id (resources.py:332),2452210,0.208295,0.208295
+state (resources.py:342),42080,0.003989,0.003989
+jobs (resources.py:347),281316,0.091012,0.091012
+pstate (resources.py:352),2503904,0.224553,0.224553
+is_allocated (resources.py:373),46736215,6.956793,6.956793
+is_idle (resources.py:378),54875,0.014720,0.014720
+is_computing (resources.py:383),838240,0.213987,0.213987
+is_switching_off (resources.py:388),548,0.000236,0.000236
+is_switching_on (resources.py:393),280,0.000105,0.000105
+is_sleeping (resources.py:398),19016,0.005177,0.005177
+is_shareable (resources.py:403),4900,0.000861,0.000861
+is_unavailable (resources.py:408),9800,0.004097,0.004097
+power (resources.py:413),820336,0.546577,0.975533
+<listcomp> (resources.py:451),1236,0.001377,0.001944
+get_pstate_by_type (resources.py:433),1236,0.000895,0.002839
+get_sleep_pstate (resources.py:482),204,0.000119,0.000451
+get_default_pstate (resources.py:494),280,0.000210,0.000889
+_switch_off (resources.py:509),204,0.000707,0.001943
+_switch_on (resources.py:533),140,0.000276,0.000851
+_set_off (resources.py:582),204,0.000380,0.001223
+_set_on (resources.py:599),140,0.000229,0.000956
+_allocate (resources.py:642),4900,0.006482,0.012239
+_start_computing (resources.py:662),4900,0.007316,0.015278
+_release (resources.py:685),4900,0.007047,0.010502
+__set_pstate (resources.py:697),688,0.000418,0.000516
+__set_state (resources.py:709),10488,0.004277,0.005063
+size (resources.py:757),49771,0.010458,0.015346
+hosts (resources.py:784),48528025,6.842129,9.232776
+<lambda> (resources.py:799),46705664,7.982544,14.932232
+get_not_allocated_hosts (resources.py:791),729776,9.696889,33.584006
+get_host (resources.py:818),49771,0.024560,0.043527
+__str__ (jobs.py:21),3000,0.002477,0.004957
+__init__ (jobs.py:32),1000,0.001286,0.001286
+on_host_state_changed (timeout_policy.py:20),10488,0.021184,0.085347
+add_to_job_infos (sds_env.py:70),1000,0.002514,0.002781
+__del__ (subprocess.py:939),1,0.000003,0.000004
+communicate (subprocess.py:984),1,0.000014,0.000050
+_remaining_time (subprocess.py:1058),3,0.000005,0.000007
+wait (subprocess.py:1078),2,0.000013,0.007455
+_handle_exitstatus (subprocess.py:1724),1,0.000016,0.000017
+_internal_poll (subprocess.py:1742),1,0.000001,0.000001
+_try_wait (subprocess.py:1777),4,0.000022,0.000114
+_wait (subprocess.py:1790),2,0.000082,0.007431
+send_signal (subprocess.py:1945),1,0.000001,0.000001
+terminate (subprocess.py:1951),1,0.000003,0.000004
+__hash__ (typing.py:329),345,0.000182,0.000244
+<genexpr> (typing.py:358),3,0.000002,0.000004
+__getitem__ (typing.py:347),2,0.000012,0.000086
+_is_dunder (typing.py:646),8,0.000006,0.000009
+<genexpr> (typing.py:669),3,0.000001,0.000001
+__init__ (typing.py:659),1,0.000010,0.000053
+__setattr__ (typing.py:762),8,0.000010,0.000019
+_type_check (typing.py:120),3,0.000007,0.000009
+_remove_dups_flatten (typing.py:219),1,0.000005,0.000006
+inner (typing.py:255),345,0.000342,0.000668
+discard (_weakrefset.py:111),1,0.000007,0.000008
+encode (encoder.py:182),2486,0.012161,0.068228
+iterencode (encoder.py:204),2486,0.053330,0.053330
+__init__ (decoder.py:284),2485,0.033810,0.033810
+decode (decoder.py:332),2485,0.013373,0.344272
+raw_decode (decoder.py:343),2485,0.037809,0.312507
+__hash__ (enum.py:735),48487,0.020090,0.027227
+name (enum.py:748),36619,0.008093,0.008093
+value (enum.py:753),12488,0.002920,0.002920
+__get__ (types.py:171),49107,0.025964,0.036977
+dumps (__init__.py:183),2486,0.007705,0.075933
+loads (__init__.py:299),2485,0.025734,0.407934
+__getitem__ (enum.py:386),3958,0.002565,0.002565
+<genexpr> (enum.py:393),35622,0.014210,0.014210
+__iter__ (enum.py:389),3958,0.008775,0.008775
+<built-in method math.floor> (~:0),1156864,0.165823,0.165823
+__instancecheck__ (abc.py:96),4956,0.003090,0.011970
+__subclasscheck__ (abc.py:100),7,0.000003,0.000018
+<method 'decode' of 'bytes' objects> (~:0),2485,0.007009,0.007009
+<method 'clear' of 'list' objects> (~:0),2486,0.000986,0.000986
+<method 'append' of 'list' objects> (~:0),125388,0.014672,0.014672
+<method 'remove' of 'list' objects> (~:0),1000,0.001421,0.001421
+<method 'count' of 'list' objects> (~:0),1,0.000001,0.000001
+<method 'get' of 'dict' objects> (~:0),4959,0.003367,0.005969
+<method 'pop' of 'dict' objects> (~:0),923,0.000598,0.000598
+<method 'keys' of 'dict' objects> (~:0),1942,0.000617,0.000617
+<method 'items' of 'dict' objects> (~:0),5900,0.000863,0.000863
+<method 'update' of 'dict' objects> (~:0),1955,0.001447,0.001447
+<method 'clear' of 'dict' objects> (~:0),1,0.000002,0.000002
+<method 'add' of 'set' objects> (~:0),4900,0.001158,0.001158
+<method 'discard' of 'set' objects> (~:0),1,0.000001,0.000001
+<method 'remove' of 'set' objects> (~:0),4900,0.001042,0.001042
+<built-in method __new__ of type object at 0x787c5d152980> (~:0),58536,0.012700,0.012700
+<method 'encode' of 'str' objects> (~:0),2486,0.003962,0.003962
+<method 'split' of 'str' objects> (~:0),10724,0.006106,0.006106
+<method 'join' of 'str' objects> (~:0),4294,0.003340,0.010015
+<method 'upper' of 'str' objects> (~:0),1,0.000001,0.000001
+<method 'startswith' of 'str' objects> (~:0),2493,0.003922,0.003922
+<method 'endswith' of 'str' objects> (~:0),5,0.000001,0.000001
+<built-in method builtins.any> (~:0),9871,0.005814,0.017721
+<built-in method builtins.callable> (~:0),4900,0.000772,0.000772
+<built-in method builtins.format> (~:0),2724,0.002688,0.014955
+<built-in method builtins.getattr> (~:0),1,0.000001,0.000001
+<built-in method builtins.hash> (~:0),48832,0.007199,0.007199
+<built-in method builtins.isinstance> (~:0),48071185,2.427478,2.439448
+<built-in method builtins.len> (~:0),77764,0.012666,0.013749
+<built-in method builtins.max> (~:0),315383,0.076148,0.076148
+<built-in method builtins.min> (~:0),105642,0.034875,0.039262
+<built-in method builtins.next> (~:0),416268,0.075153,1.177260
+<built-in method builtins.sorted> (~:0),9290,0.115026,2.533344
+<built-in method builtins.sum> (~:0),2052,0.001598,0.005379
+<built-in method sys._getframe> (~:0),1,0.000001,0.000001
+<built-in method posix.waitpid> (~:0),4,0.000093,0.000093
+<built-in method posix.WIFSIGNALED> (~:0),1,0.000001,0.000001
+<built-in method posix.WIFEXITED> (~:0),1,0.000000,0.000000
+<built-in method posix.WEXITSTATUS> (~:0),1,0.000000,0.000000
+<method 'end' of 're.Match' objects> (~:0),4970,0.000827,0.000827
+<method 'match' of 're.Pattern' objects> (~:0),4970,0.017093,0.017093
+<built-in method _operator.or_> (~:0),83679,0.008149,0.008149
+<built-in method _abc._abc_instancecheck> (~:0),4956,0.008862,0.008881
+<built-in method _abc._abc_subclasscheck> (~:0),7,0.000015,0.000015
+<built-in method time.time> (~:0),1,0.000002,0.000002
+<built-in method time.sleep> (~:0),3,0.007186,0.007186
+<built-in method time.monotonic> (~:0),5,0.000013,0.000013
+<method 'acquire' of '_thread.lock' objects> (~:0),4,0.000018,0.000018
+<method 'release' of '_thread.lock' objects> (~:0),4,0.000001,0.000001
+<method 'close' of '_io.BufferedReader' objects> (~:0),1,0.000016,0.000016
+<method 'read' of '_io.BufferedReader' objects> (~:0),1,0.000016,0.000016
+<method 'disable' of '_lsprof.Profiler' objects> (~:0),1,0.000001,0.000001

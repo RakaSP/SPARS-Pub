@@ -1,24 +1,24 @@
 paths:
   workload: "workloads/300.json"
-  platform: "platforms/platform-nasa-128.json"
-  output: "baseline"
+  platform: "platforms/platform-nasa-128-1800son-2700sof-w190son-w9sof.json"
+  output: "results/RL/Timeout-300"
 
 run:
-  algorithm: "sjf_psas"
+  algorithm: "easy_psas"
   overrun_policy: "terminate"
-  timeout: Null # Num (Int) or Null
+  timeout: 300 # Num (Int) or Null
   # can be integer epoch, "now", or "YYYY-MM-DD HH:MM:SS"
   start_time: 0
 
 rl:
   enabled: false
   learn: false
-  type: "discrete" # "discrete" | "continuous"
-  dt: 1800 # required when type == "discrete"
+  type: "continuous" # "discrete" | "continuous"
+  dt: 300 # required when type == "discrete"
   device: "cuda" # "cpu" | "cuda" | "auto" (explicit "auto" resolves to cuda if available)
   epochs: 1
   num_nodes: 128
-  checkpoint: null
+  checkpoint: "results/RL/Train-250/agent_checkpoint.pt" # null if none, else path to checkpoint file
 
   agents:
     spars:
@@ -37,5 +37,5 @@ rl:
   assign: "spars"
 
 logging:
-  level: "TRACE"
+  level: "INFO"
   file: "results/simulation.log"

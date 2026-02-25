@@ -1,0 +1,131 @@
+function,ncalls,tottime_s,cumtime_s
+<method 'add' of 'set' objects> (~:0),379,0.000060,0.000060
+<method 'get' of 'dict' objects> (~:0),1494160,0.175965,0.175965
+<method 'setdefault' of 'dict' objects> (~:0),522,0.000136,0.000136
+<method 'items' of 'dict' objects> (~:0),3550,0.000671,0.000671
+<method 'values' of 'dict' objects> (~:0),2554,0.000844,0.000844
+<method 'append' of 'list' objects> (~:0),215348,0.029789,0.029789
+<method 'insert' of 'list' objects> (~:0),1818,0.000768,0.000768
+<method 'extend' of 'list' objects> (~:0),6927,0.003220,0.004115
+<method 'pop' of 'list' objects> (~:0),2554,0.001134,0.001134
+<method 'sort' of 'list' objects> (~:0),966,0.000555,0.000555
+<method 'join' of 'str' objects> (~:0),3121,0.001214,0.001214
+<method 'find' of 'str' objects> (~:0),4,0.000002,0.000002
+<method 'rfind' of 'str' objects> (~:0),12,0.000004,0.000004
+<built-in method sys._getframe> (~:0),4,0.000003,0.000003
+<built-in method builtins.getattr> (~:0),144,0.000053,0.000053
+<built-in method builtins.hasattr> (~:0),8,0.000004,0.000004
+<built-in method builtins.isinstance> (~:0),4016,0.001163,0.001163
+<built-in method builtins.len> (~:0),520217,0.043927,0.043927
+<built-in method builtins.max> (~:0),144475,0.015647,0.015647
+<built-in method builtins.min> (~:0),7487,0.004059,0.009166
+<built-in method builtins.next> (~:0),1600,0.000972,0.005597
+<built-in method builtins.round> (~:0),4000,0.004672,0.004672
+<built-in method builtins.sorted> (~:0),4914,0.029175,0.044458
+<built-in method builtins.sum> (~:0),12770,0.024455,0.062357
+<method '__exit__' of '_thread.RLock' objects> (~:0),8,0.000002,0.000002
+<built-in method _thread.get_ident> (~:0),8,0.000002,0.000002
+<built-in method posix.getpid> (~:0),4,0.000008,0.000008
+<built-in method posix.fspath> (~:0),20,0.000004,0.000004
+<method 'write' of '_io.TextIOWrapper' objects> (~:0),4,0.000146,0.000146
+<method 'flush' of '_io.TextIOWrapper' objects> (~:0),4,0.000002,0.000002
+<built-in method time.time_ns> (~:0),4,0.000002,0.000002
+<built-in method _bisect.bisect_left> (~:0),1993,0.004322,0.006555
+format (/usr/lib/python3.13/logging/__init__.py:699),4,0.000006,0.000032
+_log (/usr/lib/python3.13/logging/__init__.py:1641),4,0.000012,0.000467
+findCaller (/usr/lib/python3.13/logging/__init__.py:1592),4,0.000017,0.000058
+isEnabledFor (/usr/lib/python3.13/logging/__init__.py:1765),5807,0.001396,0.001396
+__init__ (/usr/lib/python3.13/logging/__init__.py:298),4,0.000069,0.000141
+callHandlers (/usr/lib/python3.13/logging/__init__.py:1721),4,0.000006,0.000236
+update_energy (/papers/SPARS-Pub/SPARS/Simulator/Monitor.py:176),2554,0.085004,0.105703
+proceed (/papers/SPARS-Pub/SPARS/Simulator/Simulator.py:173),2554,0.054215,0.544529
+events_builder (/papers/SPARS-Pub/SPARS/Simulator/Algo/BasePSUS.py:132),2554,0.025268,0.047428
+timeout_policy (/papers/SPARS-Pub/SPARS/Simulator/Algo/BasePSUS.py:216),2554,0.048118,0.068229
+prep_schedule (/papers/SPARS-Pub/SPARS/Simulator/Algo/BasePSUS.py:291),2554,0.081311,0.335754
+update_custom_resources_agenda_global (/papers/SPARS-Pub/SPARS/Simulator/Algo/BasePSUS.py:94),2554,0.142967,0.213972
+allocate (/papers/SPARS-Pub/SPARS/Simulator/Algo/BasePSUS.py:45),1000,0.018496,0.030385
+advance (/papers/SPARS-Pub/SPARS/Simulator/Simulator.py:300),1620,0.016227,1.300987
+push_event (/papers/SPARS-Pub/SPARS/Simulator/Simulator.py:110),2123,0.004071,0.011817
+remove_job_from_waiting_queue (/papers/SPARS-Pub/SPARS/Simulator/JobsManager.py:21),1000,0.004422,0.004590
+backfill (/papers/SPARS-Pub/SPARS/Simulator/Algo/easy_psus.py:16),2554,0.141863,0.233460
+record (/papers/SPARS-Pub/SPARS/Simulator/Monitor.py:136),5108,0.008093,0.416930
+update_node_state (/papers/SPARS-Pub/SPARS/Simulator/Monitor.py:227),2554,0.136068,0.255708
+compute (/papers/SPARS-Pub/SPARS/Simulator/PlatformControl.py:45),1000,0.004116,0.018577
+switch_off (/papers/SPARS-Pub/SPARS/Simulator/PlatformControl.py:121),24,0.000843,0.004754
+_update_node_state (/papers/SPARS-Pub/SPARS/Simulator/Machine.py:64),1028,0.001900,0.001900
+switch_on (/papers/SPARS-Pub/SPARS/Simulator/PlatformControl.py:160),21,0.000909,0.004237
+release (/papers/SPARS-Pub/SPARS/Simulator/Machine.py:127),1000,0.001810,0.006925
+release (/papers/SPARS-Pub/SPARS/Simulator/PlatformControl.py:101),1000,0.000807,0.007732
+add_job_to_scheduled_queue (/papers/SPARS-Pub/SPARS/Simulator/Algo/BasePSUS.py:36),1000,0.001221,0.002211
+turn_on (/papers/SPARS-Pub/SPARS/Simulator/PlatformControl.py:113),21,0.000022,0.000691
+turn_off (/papers/SPARS-Pub/SPARS/Simulator/PlatformControl.py:117),22,0.000032,0.000734
+switch_on (/papers/SPARS-Pub/SPARS/Simulator/Machine.py:86),21,0.000082,0.000651
+turn_off (/papers/SPARS-Pub/SPARS/Simulator/Machine.py:102),22,0.000082,0.000655
+log_trace (/papers/SPARS-Pub/SPARS/Logger.py:43),5803,0.005899,0.010073
+FCFSPSUS (/papers/SPARS-Pub/SPARS/Simulator/Algo/fcfs_psus.py:14),2554,0.005400,0.024043
+add_job_to_waiting_queue (/papers/SPARS-Pub/SPARS/Simulator/JobsManager.py:18),1000,0.000309,0.000461
+<lambda> (/papers/SPARS-Pub/SPARS/Simulator/Simulator.py:202),3121,0.003253,0.003836
+<genexpr> (/papers/SPARS-Pub/SPARS/Simulator/Algo/BasePSUS.py:56),5900,0.000895,0.000895
+<genexpr> (/papers/SPARS-Pub/SPARS/Simulator/Algo/BasePSUS.py:200),1078,0.000187,0.000187
+<genexpr> (/papers/SPARS-Pub/SPARS/Simulator/PlatformControl.py:61),5900,0.004218,0.004218
+<genexpr> (/papers/SPARS-Pub/SPARS/Simulator/Monitor.py:263),3383,0.004598,0.004598
+<genexpr> (/papers/SPARS-Pub/SPARS/Simulator/Monitor.py:264),5855,0.004210,0.004210
+<genexpr> (/papers/SPARS-Pub/SPARS/Simulator/Monitor.py:266),12231,0.004830,0.004830
+_agenda_by_id (/papers/SPARS-Pub/SPARS/Simulator/Algo/BasePSUS.py:33),4554,0.012452,0.012452
+<genexpr> (/papers/SPARS-Pub/SPARS/Simulator/Monitor.py:268),12628,0.007790,0.007790
+<genexpr> (/papers/SPARS-Pub/SPARS/Simulator/Monitor.py:270),142129,0.016474,0.016474
+<genexpr> (/papers/SPARS-Pub/SPARS/Simulator/PlatformControl.py:132),277,0.001346,0.002472
+<genexpr> (/papers/SPARS-Pub/SPARS/Simulator/PlatformControl.py:171),245,0.001118,0.001965
+turn_on (/papers/SPARS-Pub/SPARS/Simulator/Machine.py:91),21,0.000070,0.000636
+switch_off (/papers/SPARS-Pub/SPARS/Simulator/Machine.py:95),24,0.000097,0.000838
+schedule (/papers/SPARS-Pub/SPARS/Simulator/Algo/easy_psus.py:5),2554,0.015585,0.724499
+log_info (/papers/SPARS-Pub/SPARS/Logger.py:47),4,0.000007,0.000488
+<genexpr> (/papers/SPARS-Pub/SPARS/Simulator/Algo/BasePSUS.py:64),5900,0.000889,0.000889
+_trace (/papers/SPARS-Pub/SPARS/Logger.py:10),5803,0.002779,0.004174
+schedule (/papers/SPARS-Pub/SPARS/Simulator/Scheduler.py:34),2554,0.002079,0.726977
+_set_prestart_release_time (/papers/SPARS-Pub/SPARS/Simulator/Algo/BasePSUS.py:68),1000,0.001535,0.004666
+print_states_dur (/papers/SPARS-Pub/SPARS/Simulator/Monitor.py:98),1,0.000353,0.000530
+_get_nodes_by_ids (/papers/SPARS-Pub/SPARS/Simulator/Machine.py:138),2088,0.010430,0.011007
+<lambda> (/papers/SPARS-Pub/SPARS/Simulator/Simulator.py:130),12605,0.002233,0.002233
+start_simulator (/papers/SPARS-Pub/SPARS/Simulator/Simulator.py:160),1,0.000001,0.000001
+<lambda> (/papers/SPARS-Pub/SPARS/Simulator/Algo/BasePSUS.py:186),2243,0.000382,0.000382
+set_time (/papers/SPARS-Pub/SPARS/Simulator/Algo/BasePSUS.py:207),2554,0.000398,0.000398
+<lambda> (/papers/SPARS-Pub/SPARS/Simulator/Algo/easy_psus.py:21),151040,0.011448,0.011448
+push_event (/papers/SPARS-Pub/SPARS/Simulator/Algo/BasePSUS.py:198),1078,0.003559,0.005451
+_schedule_next_rl_tick (/papers/SPARS-Pub/SPARS/Simulator/Simulator.py:153),2554,0.000464,0.000464
+on_finish (/papers/SPARS-Pub/SPARS/Simulator/Simulator.py:164),1,0.000012,0.001108
+validate_duplication (/papers/SPARS-Pub/SPARS/Simulator/PlatformControl.py:36),1088,0.001566,0.001928
+update_custom_resources_agenda_partial (/papers/SPARS-Pub/SPARS/Simulator/Algo/BasePSUS.py:78),1000,0.003236,0.007168
+on_finish (/papers/SPARS-Pub/SPARS/Simulator/Monitor.py:120),1,0.000036,0.000743
+allocate (/papers/SPARS-Pub/SPARS/Simulator/Machine.py:111),1000,0.001428,0.006770
+update_node_state_duration (/papers/SPARS-Pub/SPARS/Simulator/Monitor.py:207),2554,0.046739,0.046739
+print_energy (/papers/SPARS-Pub/SPARS/Simulator/Monitor.py:79),1,0.000070,0.000168
+current_process (/usr/lib/python3.13/multiprocessing/process.py:37),4,0.000003,0.000003
+name (/usr/lib/python3.13/multiprocessing/process.py:189),4,0.000001,0.000001
+<method 'disable' of '_lsprof.Profiler' objects> (~:0),1,0.000022,0.000022
+<built-in method _asyncio.current_task> (~:0),4,0.000007,0.000007
+handle (/usr/lib/python3.13/logging/__init__.py:1011),4,0.000013,0.000229
+filter (/usr/lib/python3.13/logging/__init__.py:840),8,0.000003,0.000003
+flush (/usr/lib/python3.13/logging/__init__.py:1131),4,0.000012,0.000017
+_format (/usr/lib/python3.13/logging/__init__.py:463),4,0.000010,0.000010
+format (/usr/lib/python3.13/logging/__init__.py:470),4,0.000002,0.000012
+emit (/usr/lib/python3.13/logging/__init__.py:1139),4,0.000013,0.000214
+current_thread (/usr/lib/python3.13/threading.py:1429),4,0.000004,0.000005
+info (/usr/lib/python3.13/logging/__init__.py:1510),4,0.000014,0.000482
+getLevelName (/usr/lib/python3.13/logging/__init__.py:129),4,0.000002,0.000004
+getMessage (/usr/lib/python3.13/logging/__init__.py:391),4,0.000002,0.000002
+format (/usr/lib/python3.13/logging/__init__.py:988),4,0.000005,0.000037
+makeRecord (/usr/lib/python3.13/logging/__init__.py:1626),4,0.000010,0.000151
+_is_internal_frame (/usr/lib/python3.13/logging/__init__.py:197),12,0.000015,0.000030
+handle (/usr/lib/python3.13/logging/__init__.py:1667),4,0.000008,0.000246
+usesTime (/usr/lib/python3.13/logging/__init__.py:455),4,0.000004,0.000006
+name (/usr/lib/python3.13/threading.py:1096),4,0.000003,0.000003
+<lambda> (/usr/lib/python3.13/logging/__init__.py:167),4,0.000009,0.000012
+usesTime (/usr/lib/python3.13/logging/__init__.py:677),4,0.000003,0.000009
+formatMessage (/usr/lib/python3.13/logging/__init__.py:683),4,0.000003,0.000015
+on_finish (/papers/SPARS-Pub/SPARS/Simulator/JobsManager.py:12),1,0.000002,0.000069
+_get_sep (<frozen posixpath>:42),4,0.000002,0.000004
+normcase (<frozen posixpath>:53),12,0.000011,0.000014
+basename (<frozen posixpath>:166),4,0.000011,0.000018
+_splitext (<frozen genericpath>:157),4,0.000005,0.000006
+splitext (<frozen posixpath>:117),4,0.000007,0.000014

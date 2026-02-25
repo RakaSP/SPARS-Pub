@@ -1,0 +1,3588 @@
+{
+    "machines": [
+        {
+            "id": 0,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 1,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 2,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 3,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 4,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 5,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 6,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 7,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 8,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 9,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 10,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 11,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 12,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 13,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 14,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 15,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 16,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 17,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 18,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 19,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 20,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 21,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 22,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 23,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 24,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 25,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 26,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 27,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 28,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 29,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 30,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 31,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 32,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 33,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 34,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 35,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 36,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 37,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 38,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 39,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 40,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 41,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 42,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 43,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 44,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 45,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 46,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 47,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 48,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 49,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 50,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 51,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 52,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 53,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 54,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 55,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 56,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 57,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 58,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 59,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 60,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 61,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 62,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "id": 63,
+            "dvfs_profiles": {
+                "base": {
+                    "power": 190,
+                    "compute_speed": 1.0
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 2700
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 190,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1800
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 9,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

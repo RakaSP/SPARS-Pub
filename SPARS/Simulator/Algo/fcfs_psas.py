@@ -24,8 +24,7 @@ class FCFSPSAS(BasePSAS):
     def schedule(self):
         super().prep_schedule()
         now = float(self.current_time)
-        if self.current_time==490:
-            print('x')
+
         # 1) current FCFS commit-only (no waking)
         started_now = self._current_fcfs_commit()
         
@@ -35,8 +34,7 @@ class FCFSPSAS(BasePSAS):
         remaining = [j for j in self.waiting_queue if j["job_id"] not in started_now]
         future_plan = self._future_fcfs_plan(remaining, barrier=now)
         
-        if future_plan:
-            print('x')
+   
 
         self.selected_list = list(future_plan)
 
@@ -135,8 +133,7 @@ class FCFSPSAS(BasePSAS):
     # ---------------- wake triggers from plan ----------------
     def _emit_wake_triggers_from_plan(self, plan):
         now = float(self.current_time)
-        if self.current_time == 155047:
-            print('x')
+   
         sleeping_ids = {n["id"] for n in self.sleeping}
 
         earliest_wake = {}

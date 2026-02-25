@@ -1,7 +1,6 @@
 # SPARS/Simulator/Simulator.py
-import json
+import cProfile, csv, json, os, pstats, time
 from SPARS.Logger import log_info, log_trace
-from math import ceil
 from bisect import bisect_left
 
 from SPARS.Simulator.JobsManager import JobsManager
@@ -312,9 +311,46 @@ class Simulator:
                     self.push_event(timestamp, event)
 
 
-def run_simulation(simulator, output_folder):
+def run_simulation(simulator, output_folder, top_n=None):
+    os.makedirs(output_folder, exist_ok=True)
+
+    # Wall-clock runtime for the whole simulation
+    t0 = time.time()
+
+    prof = cProfile.Profile()
+    prof.enable()
+
     simulator.start_simulator()
     while simulator.is_running:
         simulator.advance()
+
+    prof.disable()
+
+    t1 = time.time()
+    runtime_s = t1 - t0
+
+    # Keep your existing outputs
     log_output(simulator, output_folder)
+
+    # Save runtime_seconds.txt (same as before)
+    runtime_path = os.path.join(output_folder, "runtime_seconds.txt")
+    with open(runtime_path, "w") as f:
+        f.write(f"{runtime_s}\n")
+
+    # Save profiling CSV
+    stats = pstats.Stats(prof).sort_stats(pstats.SortKey.CUMULATIVE)
+
+    csv_path = os.path.join(output_folder, "profile.csv")
+    with open(csv_path, "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["function", "ncalls", "tottime_s", "cumtime_s"])
+
+        items = list(stats.stats.items())
+        if top_n is not None:
+            items = items[:top_n]  # already sorted by cumulative time
+
+        for func, (cc, nc, tt, ct, callers) in items:
+            filename, line, fn = func
+            w.writerow([f"{fn} ({filename}:{line})", nc, f"{tt:.6f}", f"{ct:.6f}"])
+
     log_info(f"Simulation completed. Logs saved to: {output_folder}")

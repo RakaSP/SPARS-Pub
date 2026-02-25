@@ -1,0 +1,2 @@
+,timeout,consumed_joules,mean_slowdown,mean_waiting_time,max_waiting_time,mean_turnaround_time,time_idle,time_computing,time_switching_off,time_switching_on,time_sleeping,energy_waste,count_switching_off,count_switching_on,elapsed_time,execution_time
+0,2100,79860833485.00,26.35,1059.87,,,94303837.00,285086697.00,49192612.00,32540400.00,131807013.00,24508097938.00,,,223.25,
