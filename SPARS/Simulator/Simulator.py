@@ -329,7 +329,6 @@ def run_simulation(simulator, output_folder, top_n=None):
     t1 = time.time()
     runtime_s = t1 - t0
 
-    # Keep your existing outputs
     log_output(simulator, output_folder)
 
     # Save runtime_seconds.txt (same as before)

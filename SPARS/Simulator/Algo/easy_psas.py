@@ -8,18 +8,6 @@ EPS = 1e-9
 
 
 class EASYPSAS(FCFSPSAS):
-    """
-    Your requested pipeline:
-
-    current FCFS (commit now, idle-only, no waking)
-    -> current EASY (commit now, backfill behind head, doesn't delay head)
-    -> future FCFS (plan)
-    -> future EASY (plan-only backfill on top of FCFS baseline)
-    -> emit wake callbacks (switch_on now + call_me_later_so)
-
-    IMPORTANT: We only change FUTURE PLANNING behavior (gap-aware).
-    """
-
     def schedule(self):
         super().prep_schedule()
         now = float(self.current_time)
@@ -78,7 +66,7 @@ class EASYPSAS(FCFSPSAS):
 
         self.selected_list = list(easy_future_plan)
 
-        # 6) wake callbacks (unchanged)
+        # 6) wake callbacks
         self._emit_wake_triggers_from_plan(self.selected_list)
 
         if self.timeout is not None:
@@ -86,8 +74,6 @@ class EASYPSAS(FCFSPSAS):
         super().build_callbacks()
         return self.events
 
-    # ---------------- current EASY (commit-only) ----------------
-    # UNCHANGED
     def _current_easy_commit(self, started_now, head_job_id, head_start_time, head_reserved_ids):
         now = float(self.current_time)
 
@@ -142,8 +128,6 @@ class EASYPSAS(FCFSPSAS):
             super().allocate(job, nodes)
             started_now.add(jid)
 
-    # ---------------- future FCFS seeded with head ----------------
-    # UNCHANGED
     def _future_fcfs_seed_head(self, head_job, head_nodes, head_start, jobs_after):
         base_by_id = super()._releases_by_id()
         scheduled_by_id = {
@@ -188,15 +172,7 @@ class EASYPSAS(FCFSPSAS):
 
         return plan
 
-    # ---------------- future EASY (plan-only) ----------------
     def _future_easy_backfill_from_fcfs(self, fcfs_plan):
-        """
-        Future EASY = FCFS baseline + backfill.
-
-        ONLY FIX (planning-only):
-        - res_early/res_slide must respect GAPS in scheduled_by_id queues.
-        - planned segments must be inserted into queue in time order and NOT destroy later reservations.
-        """
         now = float(self.current_time)
         if not fcfs_plan:
             return []
@@ -219,7 +195,6 @@ class EASYPSAS(FCFSPSAS):
             + list(self.switching_off)
         )
 
-        # ---------------- CHANGED (planning-only): insert segment ordered, keep release_time=max ----------------
         def _insert_segment(q, seg):
             st = float(seg["start_time"])
             i = 0
@@ -236,11 +211,9 @@ class EASYPSAS(FCFSPSAS):
             for n in nodes:
                 e = scheduled_by_id[n["id"]]
                 _insert_segment(e["queue"], dict(seg))
-                # IMPORTANT: do not overwrite later reservations
                 e["release_time"] = max(float(e["release_time"]), float(ft))
             return float(ft)
 
-        # ---------------- NEW (planning-only): true feasibility inside gaps ----------------
         def _window_feasible(job, nodes, st):
             st = float(st)
             sp = min(float(n["compute_speed"]) for n in nodes)
@@ -259,14 +232,10 @@ class EASYPSAS(FCFSPSAS):
                         return False
             return True
 
-        # ---------------- seed HEAD first ----------------
         head_job, head_nodes, head_st, head_ft = fcfs_plan[0]
         head_st = float(head_st)
 
-        # keep your old behavior: head is FCFS baseline
         if not _window_feasible(head_job, head_nodes, head_st):
-            # If baseline is inconsistent (rare), just keep it as-is (don’t “fix” anything else).
-            # (You can debug it separately if needed.)
             return []
 
         head_ft = _append_compute_fixed(head_job, head_nodes, head_st)
@@ -280,7 +249,7 @@ class EASYPSAS(FCFSPSAS):
 
             fcfs_st = float(fcfs_st)
 
-            # (a) CHANGED (planning-only): try earlier-than-FCFS backfill using GAP-AWARE selector
+            # (a) try earlier-than-FCFS backfill using GAP-AWARE selector
             res_early = self._future_select_nodes_energy_aware_gap(
                 required_nodes=req,
                 _candidates=candidates,
@@ -296,13 +265,13 @@ class EASYPSAS(FCFSPSAS):
                     out.append((job, nodes_early, float(st_early), float(ft_early)))
                     continue
 
-            # (b) CHANGED (planning-only): keep FCFS start+nodes if it actually fits in the gap
+            # (b) keep FCFS start+nodes if it actually fits in the gap
             if _window_feasible(job, fcfs_nodes, fcfs_st):
                 ft_keep = _append_compute_fixed(job, fcfs_nodes, fcfs_st)
                 out.append((job, fcfs_nodes, float(fcfs_st), float(ft_keep)))
                 continue
 
-            # (c) CHANGED (planning-only): slide to earliest >= FCFS start using GAP-AWARE selector
+            # (c) slide to earliest >= FCFS start using GAP-AWARE selector
             res_slide = self._future_select_nodes_energy_aware_gap(
                 required_nodes=req,
                 _candidates=candidates,
@@ -320,15 +289,13 @@ class EASYPSAS(FCFSPSAS):
         out.sort(key=lambda x: float(x[2]))
         return out
 
-    # ---------------- NEW: gap-aware future selector (planning-only) ----------------
     def _future_select_nodes_energy_aware_gap(self, required_nodes, _candidates, scheduled_by_id, min_start_time, job):
         """
         Planner-only selection that respects gaps inside scheduled_by_id[nid]["queue"].
 
         - Returns (nodes, start_time) where start_time is earliest >= min_start_time
           such that ALL selected nodes are free for the whole job duration.
-        - Ranking is kept similar to your _select_nodes_energy_aware:
-            (cost, state_priority, timeout_priority, nid)
+        - Ranking : (cost, state_priority, timeout_priority, nid)
         """
         now = float(self.current_time)
         min_start_time = float(min_start_time)
@@ -446,8 +413,6 @@ class EASYPSAS(FCFSPSAS):
                 free_len = float(free_until) - t
                 if free_len <= EPS:
                     continue
-
-                # cost similar to your selector, but uses idle_since (gap-aware)
                 if dat["state_label"] in ("switching_off", "sleeping"):
                     cost = dat["base"]
                 else:
@@ -464,7 +429,7 @@ class EASYPSAS(FCFSPSAS):
             if len(pool) < required_nodes:
                 continue
 
-            pool.sort(key=lambda x: (x[0], x[1], x[2], x[3]))  # same ordering style
+            pool.sort(key=lambda x: (x[0], x[1], x[2], x[3]))
 
             # iterative filter to handle walltime depending on min speed
             cur_pool = pool

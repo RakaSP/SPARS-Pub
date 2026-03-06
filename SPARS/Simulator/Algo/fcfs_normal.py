@@ -15,7 +15,6 @@ class FCFSNormal(BaseAlgorithm):
     Assumes each node has 'compute_speed' and 'power'.
     """
 
-    # ---------- public ----------
     def schedule(self):
         super().prep_schedule()
         self.FCFSNormal()
@@ -37,7 +36,6 @@ class FCFSNormal(BaseAlgorithm):
                 break
             super().allocate(job, selected_nodes)
 
-    # ---------- internals ----------
     def _remaining_idle_timeout(self, node_id: int) -> float:
         """
         Remaining time until this idle node would be switched off by timeout_policy.
@@ -71,7 +69,6 @@ class FCFSNormal(BaseAlgorithm):
         if len(_candidates) < required_nodes:
             return None
 
-        # Normalize records
         normalized = []
         for node in _candidates:
             speed = float(node.get("compute_speed"))

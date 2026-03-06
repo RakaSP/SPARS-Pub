@@ -185,7 +185,6 @@ class Monitor:
             if not ecr_entry:
                 continue
 
-            # Correct and cheap time span
             dt = current_time - e_entry["last_update"]
             if dt <= 0:
                 # nothing to accrue (clock not advanced)

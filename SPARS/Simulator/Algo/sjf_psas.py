@@ -8,37 +8,22 @@ EPS = 1e-9
 
 
 class SJFPSAS(BasePSAS):
-    """
-    Priority: lowest nodes (job['res']) first, then lowest reqtime.
-
-    Sorting key = (int(job["res"]), float(job["reqtime"])) and Python sort is stable
-    so ties keep original queue order.
-
-    Node selection is energy-aware:
-      Minimize ( sum(power) / min(compute_speed) ).
-    Tie-breaks:
-      1) Earliest Start Time
-      2) Lower total power
-    """
-
     def __init__(self, machines, jobs_manager, start_time, timeout=None):
         super().__init__(machines, jobs_manager, start_time, timeout)
         self.selected_list = []
 
-    # ---------- helpers ----------
     @staticmethod
     def _job_key(job):
         return (int(job["res"]), float(job["reqtime"]))
 
-    # ---------- public ----------
     def schedule(self):
         super().prep_schedule()
         now = float(self.current_time)
 
-        # 1) current SJF commit-only (no waking)
+        # 1) current SJF commi
         started_now = self._current_sjf_commit()
 
-        # 2) future SJF plan-only
+        # 2) future SJF plan
         remaining = [j for j in self.waiting_queue if j["job_id"] not in started_now]
         
         future_plan = self._future_sjf_plan(remaining, barrier=now)
@@ -53,7 +38,7 @@ class SJFPSAS(BasePSAS):
         super().build_callbacks()
         return self.events
 
-    # ---------------- current SJF (commit-only) ----------------
+    # ---------------- current SJF ----------------
     def _current_sjf_commit(self):
         now = float(self.current_time)
         started_now = set()
@@ -63,7 +48,6 @@ class SJFPSAS(BasePSAS):
             if req <= 0:
                 continue
 
-            # keep your current behavior (stop when first in this priority order can't start)
             if len(self.idle) < req:
                 break
 
@@ -85,7 +69,7 @@ class SJFPSAS(BasePSAS):
 
         return started_now
 
-    # ---------------- future SJF (plan-only) ----------------
+    # ---------------- future SJF ----------------
     def _future_sjf_plan(self, jobs, barrier):
         now = float(self.current_time)
 

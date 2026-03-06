@@ -44,7 +44,6 @@ class BaseAlgorithm:
         self.current_time = float(start_time)
         self.timeout = timeout
 
-        # New partitions
         self.reserved = []
         self.computing = []
         self.idle = []
@@ -55,7 +54,6 @@ class BaseAlgorithm:
         self.timeout_list = []
         self.next_timeout_at = None
 
-        # resource agenda (rebuilt in prep_schedule)
         self.next_releases = [
             {'node_id': n['id'], 'queue': [],
                 'release_time': self.current_time}
@@ -99,7 +97,6 @@ class BaseAlgorithm:
         last_phase = entry['queue'][-1]
         finish_time = float(last_phase['finish_time'])
 
-        # If any phase has unknown finish time (inf), the entire release time is unknown
         if math.isinf(finish_time):
             entry['release_time'] = float('inf')
         else:
@@ -117,7 +114,7 @@ class BaseAlgorithm:
         q = entry['queue']
         if q:
             return float(q[-1]['finish_time'])
-        # queue empty -> use recorded release_time (0.0 is allowed by your policy)
+        # queue empty -> use recorded release_time
         return float(entry['release_time'])
 
     def add_job_to_scheduled_queue(self, job, nodes):
@@ -131,13 +128,6 @@ class BaseAlgorithm:
     # ---------------- Transitions lookup (from machines_transitions) ----------------
 
     def _ensure_transition_index(self):
-        """
-        Build once: { node_id: { (from_state, to_state): transition_time, ... }, ... }
-        Expected external attribute: self.machines_transitions = [
-            {"node_id": 1, "transitions": [{"from": "sleeping", "to": "active", "transition_time": 12.3}, ...]},
-            ...
-        ]
-        """
         if hasattr(self, "_trans_index_built") and self._trans_index_built:
             return
 
@@ -208,10 +198,8 @@ class BaseAlgorithm:
 
                 # Check if this is a compute phase that exceeded finish_time but job is still running
                 if _COMPUTE_RE.fullmatch(str(seg['phase'])):
-                    # Extract job ID from compute phase string - SIMPLE
                     phase_str = str(seg['phase'])
-                    # 'compute(job=123)' -> extract '123'
-                    # Remove 'compute(job=' and ')'
+
                     job_id_str = phase_str[12:-1]
                     phase_job_id = int(job_id_str)
 
@@ -306,7 +294,6 @@ class BaseAlgorithm:
         """
         - Emit execution_start for any job whose allocated nodes are ACTIVE & idle.
         - Power control: ONLY switch_on nodes that are both RESERVED and SLEEPING.
-        - Does NOT append compute phases here (allocate() already handled that in your version).
         """
         node_by_id = {n['id']: n for n in self.state}
         reserved_node_ids = {
@@ -441,7 +428,6 @@ class BaseAlgorithm:
 
         now = self.current_time
 
-        # NEW: refresh (adds new idle nodes, removes reserved/non-idle)
         self._rebuild_timeout_list()
 
         state_by_id = {n['id']: n for n in self.state}

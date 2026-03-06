@@ -8,34 +8,21 @@ EPS = 1e-9
 
 
 class FCFSPSAS(BasePSAS):
-    """
-    Node selection is energy-aware:
-      Minimize ( sum(power) / min(compute_speed) ).
-    Tie-breaks:
-      1) Earliest Start Time
-      2) Lower total power
-    """
-
     def __init__(self, machines, jobs_manager, start_time, timeout=None):
         super().__init__(machines, jobs_manager, start_time, timeout)
         self.selected_list = []
 
-    # ---------- public ----------
     def schedule(self):
         super().prep_schedule()
         now = float(self.current_time)
 
-        # 1) current FCFS commit-only (no waking)
+        # 1) current FCFS commit
         started_now = self._current_fcfs_commit()
-        
-   
 
-        # 2) future FCFS plan-only
+        # 2) future FCFS plan
         remaining = [j for j in self.waiting_queue if j["job_id"] not in started_now]
         future_plan = self._future_fcfs_plan(remaining, barrier=now)
         
-   
-
         self.selected_list = list(future_plan)
 
         # 3) wake callbacks
@@ -45,8 +32,7 @@ class FCFSPSAS(BasePSAS):
             super().timeout_policy()
         super().build_callbacks()
         return self.events
-
-    # ---------------- current FCFS (commit-only) ----------------
+    
     def _current_fcfs_commit(self):
         now = float(self.current_time)
         started_now = set()
@@ -78,7 +64,6 @@ class FCFSPSAS(BasePSAS):
 
         return started_now
 
-    # ---------------- future FCFS (plan-only) ----------------
     def _future_fcfs_plan(self, jobs, barrier):
 
         base_by_id = super()._releases_by_id()
@@ -125,12 +110,10 @@ class FCFSPSAS(BasePSAS):
             ft = _append_planned_compute(job, nodes, float(st))
             plan.append((job, nodes, float(st), float(ft)))
 
-            # FCFS ordering barrier
             barrier = float(st)
 
         return plan
 
-    # ---------------- wake triggers from plan ----------------
     def _emit_wake_triggers_from_plan(self, plan):
         now = float(self.current_time)
    
@@ -160,7 +143,6 @@ class FCFSPSAS(BasePSAS):
         if immediate:
             self.push_event(now, {"type": "switch_on", "nodes": immediate})
 
-            # keep partitions consistent this tick
             imm_set = set(immediate)
             self.sleeping = [n for n in self.sleeping if n["id"] not in imm_set]
             state_by_id = {n["id"]: n for n in self.state}
@@ -169,7 +151,6 @@ class FCFSPSAS(BasePSAS):
         for t in future_times:
             self.push_event(float(t), {"type": "call_me_later_so"})
 
-    # ---------- internals ----------
     def _remaining_idle_timeout(self, node_id: int) -> float:
         if self.timeout is None:
             return math.inf

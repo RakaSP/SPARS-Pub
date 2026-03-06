@@ -114,7 +114,7 @@ class EASYNormal(FCFSNormal):
         # Maintain eligible nodes (release_time <= cutoff) sorted by speed ascending for bisect
         # tuples: (speed, power, node_id, release_time, remaining_idle_timeout, node)
         eligible_nodes = []
-        eligible_speeds = []      # parallel list of speeds for bisect
+        eligible_speeds = [] 
         scan_index = 0
 
         best_key = None

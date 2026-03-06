@@ -170,10 +170,6 @@ class BasePSAS:
         return float(by_pair.get((from_state, to_state), 0.0))
 
     def _wake_lead_time(self, node_id: int) -> float:
-        """
-        Total time sleeping -> active.
-        Must match how _rebuild_next_releases_global() models sleeping readiness.
-        """
         t_sleep_to_on = self._transition_time(node_id, "sleeping", "switching_on")
         t_on_to_active = self._transition_time(node_id, "switching_on", "active")
         return float(t_sleep_to_on + t_on_to_active)
@@ -293,7 +289,6 @@ class BasePSAS:
 
             self._recalculate_release_at(entry)
 
-    # ---------------- Allocation and Call me Laters----------------
     def build_callbacks(self):
         execution_finish_lists = []
 

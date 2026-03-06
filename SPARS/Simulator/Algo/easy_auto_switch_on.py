@@ -56,22 +56,6 @@ class EASY(FCFS):
                     super().allocate(job, selected_nodes)
 
     def find_node_combination(self, max_finish_time: float, job: dict, candidates: list):
-        """
-        Pick a size `job['res']` subset from `candidates` that can finish before `max_finish_time`
-        without combinatorial explosion. This adapts your old sweep/bisect idea and uses the same scoring/tie-breaks
-        as _select_nodes_energy_aware.
-
-        Feasibility model:
-        For any cutoff 'cutoff_release_time' (the max release time among the chosen nodes),
-            min_speed >= required_time / (max_finish_time - cutoff_release_time),
-        using only nodes with release_time <= cutoff_release_time.
-
-        Scoring (consistent with _select_nodes_energy_aware):
-        score = (sum_power) / min_speed
-        tie-breaks: smaller sum(remaining_idle_timeout), then lower total power, then lexicographically smaller node IDs.
-
-        Returns: list[dict node] or None
-        """
         required_nodes = int(job.get('res'))
         if required_nodes <= 0:
             return []
@@ -134,7 +118,7 @@ class EASY(FCFS):
         # Maintain eligible nodes (release_time <= cutoff) sorted by speed ascending for bisect
         # tuples: (speed, power, node_id, release_time, remaining_idle_timeout, node)
         eligible_nodes = []
-        eligible_speeds = []      # parallel list of speeds for bisect
+        eligible_speeds = []
         scan_index = 0
 
         best_key = None

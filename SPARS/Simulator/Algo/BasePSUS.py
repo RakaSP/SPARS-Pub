@@ -17,19 +17,17 @@ class BasePSUS:
         self.timeout_list = []
         self.next_timeout_at = None
 
-        # --- merged agenda: started & release_time included ---
         self.compute_agenda = [
             {
                 'node_id': n['id'],
-                'started': False,        # has the node started computing?
+                'started': False,       
                 'start_time': None,
                 'finish_time': None,
-                'release_time': 0.0,     # time-to-free; pre-start = job walltime
+                'release_time': 0.0,     
             }
             for n in self.state
         ]
 
-    # ---------------- Core helpers ----------------
     def _agenda_by_id(self):
         return {e['node_id']: e for e in self.compute_agenda}
 
@@ -40,7 +38,6 @@ class BasePSUS:
                                      'runtime': job['runtime'],
                                      'res': job['res'],
                                      'nodes': nodes})
-    # ---------------- Allocation ----------------
 
     def allocate(self, job, allocated_nodes):
         """Register allocation: remove from available, add to allocated, set pre-start release_time."""
@@ -48,10 +45,8 @@ class BasePSUS:
             return
 
         alloc_ids = {n['id'] for n in allocated_nodes}
-        # Remove from available
         self.available = [
             n for n in self.available if n['id'] not in alloc_ids]
-        # Add to allocated (no dups)
         already = {n['id'] for n in self.allocated}
         self.allocated.extend(
             n for n in allocated_nodes if n['id'] not in already)
@@ -60,7 +55,6 @@ class BasePSUS:
         self.add_job_to_scheduled_queue(job, node_ids)
         self.waiting_queue = [
             _job for _job in self.waiting_queue if job['job_id'] != _job['job_id']]
-        # Pre-start: set release_time = walltime (slowest node)
         compute_speed = min(n['compute_speed'] for n in allocated_nodes)
         walltime = job['runtime'] / compute_speed
         self._set_prestart_release_time(node_ids, walltime)
@@ -70,7 +64,6 @@ class BasePSUS:
         ag = self._agenda_by_id()
         for nid in node_ids:
             ca = ag[nid]
-            # Only set if not started; allocation may happen earlier
             if not ca['started']:
                 ca['release_time'] = float(walltime)
 
@@ -148,7 +141,6 @@ class BasePSUS:
                     break
 
             if executable:
-
                 # Stamp start/finish & mark started
                 comp_speeds = [node_by_id[nid]['compute_speed']
                                for nid in allocated_node_ids]
@@ -224,7 +216,6 @@ class BasePSUS:
         state_by_id = {n['id']: n for n in self.state}
         allocated_ids = {n['id'] for n in self.allocated}
 
-        # Current timeout entries (by id) for O(1) checks
         timeout_ids = {t['node_id'] for t in self.timeout_list}
 
         # 1) Remove any entries whose node just became allocated
@@ -241,7 +232,7 @@ class BasePSUS:
                 self.timeout_list.append({'node_id': nid, 'time': expire_at})
                 timeout_ids.add(nid)
 
-        # 3) Walk the timeout list: apply your rules
+        # 3) Walk the timeout list
         keep = []
         switch_off = []
         next_earliest = None
@@ -269,10 +260,7 @@ class BasePSUS:
                 next_earliest = t['time'] if next_earliest is None else min(
                     next_earliest, t['time'])
             else:
-                # now >= time
-                # if not allocated -> switch off
                 switch_off.append(nid)
-                # (if it were allocated, we'd have dropped it above)
 
         # 4) Commit new timeout list
         self.timeout_list = keep
@@ -294,7 +282,6 @@ class BasePSUS:
         scheduled_ids = [job['job_id'] for job in self.scheduled_queue]
         self.waiting_queue = [
             job for job in waiting_queue if job['job_id'] not in scheduled_ids]
-        # Partition nodes from current state (single pass)
         self.available, self.allocated = [], []
         allocated_ids = []
         for job in self.scheduled_queue:
@@ -305,5 +292,4 @@ class BasePSUS:
             else:
                 self.available.append(node)
 
-        # Only started nodes’ release_time is recomputed from finish_time
         self.update_custom_resources_agenda_global()

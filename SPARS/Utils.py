@@ -86,7 +86,6 @@ def process_node_job_data(nodes_data, jobs):
     jobs_exploded = jobs_exploded.explode(
         'nodes').rename(columns={'nodes': 'node_id'})
 
-    # keep times as float
     for c in ('start_time', 'finish_time', 'subtime'):
         if c in jobs_exploded.columns:
             jobs_exploded[c] = pd.to_numeric(

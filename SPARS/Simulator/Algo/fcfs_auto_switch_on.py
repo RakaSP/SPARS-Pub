@@ -3,19 +3,6 @@ from .BaseAlgorithm import BaseAlgorithm
 
 
 class FCFS(BaseAlgorithm):
-    """
-    First-Come-First-Served using only IDLE nodes.
-
-    Node selection is energy-aware:
-      Minimize ( sum(power) / min(compute_speed) ).
-    Tie-breaks:
-      1) Shorter remaining idle-timeout first (closer to switch-off => pick sooner)
-      2) Lower total power
-      3) Lexicographically smaller node-id list
-    Assumes each node has 'compute_speed' and 'power'.
-    """
-
-    # ---------- public ----------
     def schedule(self):
         super().prep_schedule()
         self.FCFSAuto()
@@ -26,7 +13,7 @@ class FCFS(BaseAlgorithm):
         return self.events
 
     def FCFSAuto(self):
-        for job in self.waiting_queue[:]:  # snapshot to avoid iterator issues
+        for job in self.waiting_queue[:]: 
             required = int(job["res"])
 
             # 1) Prefer ACTIVE & IDLE
@@ -38,13 +25,13 @@ class FCFS(BaseAlgorithm):
                 candidates += list(self.sleeping)
 
             if len(candidates) < required:
-                break  # FCFS: stop at the first unsatisfied job
+                break
 
             selected = self._select_nodes_energy_aware(required, candidates)
             if not selected:
                 break
 
-            super().allocate(job, selected)  # will add sleep_to_active for sleepers
+            super().allocate(job, selected)
 
     # ---------- internals ----------
     def _remaining_idle_timeout(self, node_id: int) -> float:
@@ -79,7 +66,6 @@ class FCFS(BaseAlgorithm):
         if len(_candidates) < required_nodes:
             return None
 
-        # Normalize records
         normalized = []
 
         for node in _candidates:
@@ -93,7 +79,6 @@ class FCFS(BaseAlgorithm):
                 "remaining_timeout": rem_timeout,
             })
 
-        # Unique speeds (thresholds), high to low
         speed_levels = sorted({item["speed"]
                               for item in normalized}, reverse=True)
 
