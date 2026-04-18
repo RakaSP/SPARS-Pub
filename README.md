@@ -143,6 +143,59 @@ Available schedulers: **FCFS** and **EASY**, with 3 variants:
 
 The simulation produces CSV logs containing job start/finish times, node allocations, and system events.
 
+### Sample `simulator_config.yaml`
+
+The example below simulates the **last 60% of the NASA Ames iPSC/860 workload** on a **128-node platform** using the **EASY PSAS** algorithm, and a timeout shutdown policy of 300 seconds.
+
+```yaml
+paths:
+  workload: "workloads/json/nasa-60-back.json"
+  platform: "platforms/platform-nasa-128-1800son-2700sof-w190son-w9sof.json"
+  output: "results"
+
+run:
+  algorithm: "easy_psas"
+  overrun_policy: "terminate"
+  timeout: 300 # decision interval (Int) or null
+  start_time: 0 # can be integer or "now"
+
+rl:
+  enabled: false
+  learn: false
+  type: "discrete" # "discrete" | "continuous"
+  dt: 1800 # required when type == "discrete"
+  device: "cuda" # "cpu" | "cuda" | "auto"
+  epochs: 1
+  num_nodes: 128
+  checkpoint: null
+
+agents:
+  spars:
+    class: "RL_Agent.SPARS.agent:ActorCritic"
+    params:
+      obs_dim: 6
+      device: "cuda"
+      optimizer:
+        class: "torch.optim:Adam"
+        params:
+          lr: 0.0003
+    assign: "spars"
+
+logging:
+  level: "TRACE"
+  file: "results/simulation.log"
+```
+
+**Key settings explained:**
+
+- `paths.workload: workloads/json/nasa-60-back.json` — points to the last-60%-split of the NASA Ames iPSC/860 trace.
+- `paths.platform: platforms/platform-nasa-128-1800son-2700sof-w190son-w9sof.json` — 128-node platform with 1800 s switch-on / 2700 s switch-off latencies and corresponding wake/sleep power draws.
+- `run.algorithm: "easy_psas"` — uses the EASY backfilling scheduler with power-state-aware scheduling (PSAS+IPM).
+- `run.overrun_policy: "terminate"` — jobs that exceed their requested runtime are immediately terminated.
+- `run.timeout: 300` —  the power manager will switch off any node that has been idle for more than 300 seconds, unless the scheduler policy requires it to stay on (e.g., to fulfill a pending reservation).
+- `rl.enabled: false` — reinforcement learning is disabled; the simulator runs in classic scheduling mode.
+- `logging.level: "TRACE"` — enables verbose trace-level logging for detailed debugging output.
+- 
 ## 📊 Results Visualization
 
 Notebook: create_ganttchart.ipynb
