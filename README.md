@@ -195,7 +195,7 @@ logging:
 - `run.timeout: 300` —  the power manager will switch off any node that has been idle for more than 300 seconds, unless the scheduler policy requires it to stay on (e.g., to fulfill a pending reservation).
 - `rl.enabled: false` — reinforcement learning is disabled; the simulator runs in classic scheduling mode.
 - `logging.level: "TRACE"` — enables verbose trace-level logging for detailed debugging output.
-- 
+
 ## 📊 Results Visualization
 
 Notebook: create_ganttchart.ipynb
