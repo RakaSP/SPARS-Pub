@@ -20,7 +20,10 @@ SPARS can:
 Run commands from the project root. `RunAll.py` expects the virtual environment to be named `SPARS-venv` and located in the project directory.
 
 ## Installation
+
 ### Cloning
+
+Clone the latest SPARS source code and enter the project directory:
 
 ```bash
 git clone --depth 1 https://github.com/RakaSP/SPARS-Pub.git
@@ -29,6 +32,8 @@ cd SPARS-Pub
 
 ### Linux
 
+Create a Python 3.11 virtual environment, activate it, and install the Linux dependencies:
+
 ```bash
 python3.11 -m venv SPARS-venv
 source SPARS-venv/bin/activate
@@ -36,6 +41,8 @@ python -m pip install -r requirements-linux.txt
 ```
 
 ### Windows PowerShell
+
+Create a Python 3.11 virtual environment, activate it, and install the Windows dependencies:
 
 ```powershell
 py -3.11 -m venv SPARS-venv
