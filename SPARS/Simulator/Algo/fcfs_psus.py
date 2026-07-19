@@ -1,4 +1,4 @@
-from SPARS.Simulator.Algo.BasePSUS import BasePSUS
+from SPARS.Simulator.Algo.base_psus import BasePSUS
 
 
 class FCFSPSUS(BasePSUS):

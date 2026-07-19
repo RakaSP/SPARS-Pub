@@ -26,8 +26,7 @@ class EASYPSUS(FCFSPSUS):
             reservation = candidates[-p_job['res']:]
 
             for job in backfill_queue:
-                not_reserved = [
-                    node for node in self.available if node['id'] not in reservation]
+                not_reserved = [node for node in self.available if node not in reservation]
                 if job['res'] <= len(not_reserved):
                     allocated_nodes = not_reserved[:job['res']]
                     super().allocate(job, allocated_nodes)

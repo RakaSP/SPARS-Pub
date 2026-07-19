@@ -11,61 +11,64 @@ from SPARS.Utils import log_output
 
 
 _EVENT_PRIORITY = {
-    'turn_on': 0,
-    'turn_off': 1,
-    'execution_finished': 2,
-    'execution_start': 3,
-    'arrival': 4,
-    'switch_off': 5,
-    'switch_on': 6,
+    "oracle": -1,
+    "turn_on": 0,
+    "turn_off": 1,
+    "execution_finished": 2,
+    "arrival": 3,
+    "execution_start": 4,
+    "switch_off": 5,
+    "switch_on": 6,
 }
 
 
 class Simulator:
     @classmethod
-    def from_config(cls, cfg: dict,  rl_kwargs: dict | None = None):
+    def from_config(cls, cfg: dict, rl_kwargs: dict | None = None):
         paths = cfg["paths"]
         run = cfg["run"]
-        rl = cfg.get("rl", {})
-        start_time = run.get("start_time", 0)
+        rl = cfg["rl"]
+        start_time = run["start_time"]
         from datetime import datetime
         if isinstance(start_time, str):
             if start_time.lower() == "now":
                 start_time = int(datetime.now().timestamp())
             else:
-                start_time = int(datetime.strptime(
-                    start_time, "%Y-%m-%d %H:%M:%S").timestamp())
+                start_time = int(datetime.strptime(start_time, "%Y-%m-%d %H:%M:%S").timestamp())
         else:
             start_time = int(start_time)
 
-        rl_enabled = bool(rl.get("enabled", False))
-        rl_type = (rl_kwargs or {}).get(
-            "rl_type", rl.get("type")) if rl_enabled else None
-        rl_dt = (rl_kwargs or {}).get("rl_dt", rl.get(
-            "dt")) if rl_type == "discrete" else None
+        rl_enabled = bool(rl["enabled"])
+        learn = bool((rl_kwargs or {}).get("learn", rl["learn"]))
+        rl_type = (rl_kwargs or {}).get("rl_type", rl.get("type"))
+        rl_dt = (rl_kwargs or {}).get("rl_dt", rl.get("dt"))
 
         return cls(
             workload_path=paths["workload"],
             platform_path=paths["platform"],
             start_time=start_time,
             algorithm=run["algorithm"],
-            overrun_policy=run.get("overrun_policy", "continue"),
+            overrun_policy=run["overrun_policy"],
             rl=rl_enabled,
+            learn=learn,
             rl_type=rl_type,
             rl_dt=rl_dt,
-            timeout=run.get("timeout", None),
+            algo_config=run["algo_config"],
+            force_wakeup=run["force_wakeup"],
         )
 
     def __init__(self, workload_path, platform_path, start_time, algorithm,
-                 overrun_policy, rl=False, rl_type=None, rl_dt=None, timeout=None):
+                overrun_policy, rl, learn, rl_type, rl_dt, algo_config, force_wakeup):
         with open(workload_path, 'r') as file:
             self.workload_info = json.load(file)
-        with open(platform_path, 'r') as file:
-            self.platform_info = json.load(file)
-
-        self.PlatformControl = PlatformControl(
-            self.platform_info, overrun_policy, start_time)
-        self.Monitor = Monitor(self.platform_info, start_time)
+        
+        self.platform_control = PlatformControl(
+            platform_path, overrun_policy, start_time)
+        
+        if self.workload_info['nb_res'] > len(self.platform_control.machine.nodes):
+            raise RuntimeError(
+                "Workload max requested node exceed number of nodes in platform.")
+        self.monitor = Monitor(self.platform_control.machine, start_time)
 
         self.current_time = start_time
         self.events = []
@@ -76,15 +79,21 @@ class Simulator:
         self.jobs_manager = JobsManager()
         self.start_time = start_time
         self.scheduler = Scheduler(
-            self.PlatformControl.machines,
-            self.jobs_manager,
-            algorithm,
-            start_time,
-            timeout
+            machines=self.platform_control.machine,
+            jobs_manager=self.jobs_manager,
+            algorithm=algorithm,
+            start_time=start_time,
+            algo_config=algo_config,
+            workload=self.workload_info,
+            platform=self.platform_control.machine.nodes,
+            monitor=self.monitor,
+            platform_control=self.platform_control,
         )
-
+        
         # RL
         self.rl = rl  # <- This means RL Enabled: True or False
+        self.learn = learn
+        
         self.rl_tick_scheduled = False
         if self.rl and rl_type is None:
             raise RuntimeError(
@@ -94,6 +103,7 @@ class Simulator:
             raise RuntimeError(
                 "Discrete Time is required for RL_TYPE Discrete")
         self.rl_dt = rl_dt
+        self.force_wakeup = force_wakeup
 
         # seed events
         self.push_event(start_time, {'type': 'simulation_start'})
@@ -139,151 +149,240 @@ class Simulator:
         else:
             evs.insert(i, {'timestamp': timestamp, 'events': [event]})
 
-    # ---- RL tick helpers (discrete) ----
     def _schedule_first_rl_tick(self):
-        if self.rl and self.rl_type == 'discrete':
-            # next multiple of rl_dt at or after current_time
-            next_tick = ((self.current_time + self.rl_dt - 1) //
-                         self.rl_dt) * self.rl_dt
+        if self.rl and self.rl_type == 'discrete' and not self.rl_tick_scheduled:
+            next_tick = self.current_time + self.rl_dt
             self.push_event(next_tick, {'type': 'CALL_RL'})
+            self.rl_tick_scheduled = True
 
     def _schedule_next_rl_tick(self):
-        if self.rl and self.rl_type == 'discrete' and self.rl_tick_scheduled == False:
-            # strictly after current_time
-            next_tick = ((self.current_time // self.rl_dt) + 1) * self.rl_dt
+        if self.rl and self.rl_type == 'discrete' and not self.rl_tick_scheduled:
+            next_tick = self.current_time + self.rl_dt
             self.push_event(next_tick, {'type': 'CALL_RL'})
             self.rl_tick_scheduled = True
 
     def start_simulator(self):
         self.is_running = True
-        # self._schedule_first_rl_tick()
-
+        self._schedule_first_rl_tick()
+        
     def on_finish(self):
         self.is_running = False
         log_info(f"Simulation finished at time {self.current_time}.")
-        self.jobs_manager.on_finish()
-        self.Monitor.on_finish()
+        self.monitor.on_finish()
         message = {'now': self.current_time, 'event_list': [
             {'timestamp': self.current_time, 'events': [{'type': 'simulation_finished'}]}]}
         return message
 
     def proceed(self):
-        if len(self.events) == 0:
-            message = self.on_finish()
-            return message
+        if self.num_finished_jobs == self.num_jobs:
+            return self.on_finish()
+        
+        log_trace(f"Job remaining {self.num_jobs - self.num_finished_jobs}")
+        
+        only_rl_call_left = (
+            len(self.events) > 0
+            and all(
+                event.get('type') == 'CALL_RL'
+                for event_group in self.events
+                for event in event_group['events']
+            )
+        )
+        
 
+        current_event_is_rl_call = (
+            getattr(self, 'event', {}).get('type') == 'CALL_RL'
+        )
+
+        should_force_wakeup = (
+            self.force_wakeup
+            and self.num_finished_jobs < self.num_jobs
+            and (
+                (
+                    self.rl_type == 'continuous'
+                    and len(self.events) == 0
+                )
+                or (
+                    self.rl_type == 'discrete'
+                    and only_rl_call_left
+                    and not current_event_is_rl_call
+                )
+            )
+        )
+
+        if should_force_wakeup:
+            nodes = self.platform_control.machine.nodes
+            sleeping_nodes = [nid for nid, node in nodes.items() if node.get("state") == "sleeping"]
+            idle_count = sum(1 for node in nodes.values() if node.get("state") == "active" and node.get("job_id") is None)
+            target_active_idle = min(len(nodes), sum(job["res"] for job in self.jobs_manager.waiting_queue))
+            need = target_active_idle - idle_count
+
+            if need > 0:
+                self.push_event(self.current_time, {
+                    "type": "switch_on",
+                    "nodes": sleeping_nodes[:need],
+                })
+        elif len(self.events) == 0 and self.num_finished_jobs < self.num_jobs:
+            return self.on_finish()
+        
         # pop earliest events
         self.current_time, events = self.events.pop(0).values()
 
-        # schedule next RL discrete tick (aligned to grid)
-        self._schedule_next_rl_tick()
+        self.monitor.record(mode='before', 
+            machine=self.platform_control.machine,     
+            current_time=self.current_time)
 
-        # logging (compact)
-        for e in events:
-            row = [f"[Time={self.current_time:.2f}]"]
-            if "job_id" in e:
-                row.append(f"job_id={e['job_id']}")
-            if "type" in e:
-                row.append(f"type={e['type']}")
-            for k, v in e.items():
-                if k in ("job_id", "type"):
-                    continue
-                if k in ("start_time", "subtime") and isinstance(v, (float, int)):
-                    v = round(v, 2)
-                row.append(f"{k}={v}")
-            log_trace(" ".join(row))
+        # event ordering
+        events = sorted(
+            events,
+            key=lambda e: _EVENT_PRIORITY.get(
+                e["type"],
+                float("inf"),
+            ),
+        )
 
-        self.Monitor.record(mode='before', current_time=self.current_time)
-
-        # deterministic event ordering
-        events = sorted(events, key=lambda e: _EVENT_PRIORITY.get(
-            e['type'], float('inf')))
+        processed_events = []
 
         record_job_arrival = []
         record_job_submission = []
         record_job_execution = []
 
         need_rl = False
-        for event in events:
+
+        while events:
+            event = events.pop(0)
+            processed_events.append(event)
+
+            row = [f"[Time={self.current_time:.2f}]"]
+
+            if "job_id" in event:
+                row.append(f"job_id={event['job_id']}")
+
+            if "type" in event:
+                row.append(f"type={event['type']}")
+
+            for key, value in event.items():
+                if key in ("job_id", "type"):
+                    continue
+
+                if (
+                    key in ("start_time", "subtime")
+                    and isinstance(value, (float, int))
+                ):
+                    value = round(value, 2)
+
+                row.append(f"{key}={value}")
+
+            log_trace(" ".join(row))
+
             self.event = event
-            etype = event['type']
+            etype = event["type"]
 
             if etype == 'switch_off':
-                result_events = self.PlatformControl.switch_off(
-                    event['nodes'], self.current_time)
+                result_events = self.platform_control.switch_off(
+                    event["nodes"],
+                    self.current_time,
+                    oracle_durations=event.get("oracle_durations"),
+                )
                 for ev in result_events:
                     self.push_event(ev['timestamp'], ev['event'])
 
             elif etype == 'turn_off':
-                self.PlatformControl.turn_off(event['nodes'])
-                if self.rl and self.rl_type == 'continuous':
-                    need_rl = True
+                self.platform_control.turn_off(event['nodes'], self.current_time)
+                # if self.rl and self.rl_type == 'continuous':
+                #     need_rl = True
 
             elif etype == 'switch_on':
-                result_events = self.PlatformControl.switch_on(
-                    event['nodes'], self.current_time)
+                result_events = self.platform_control.switch_on(
+                    event["nodes"],
+                    self.current_time,
+                    oracle_durations=event.get("oracle_durations"),
+                )
                 for ev in result_events:
                     self.push_event(ev['timestamp'], ev['event'])
 
             elif etype == 'turn_on':
-                self.PlatformControl.turn_on(event['nodes'])
-                if self.rl and self.rl_type == 'continuous':
-                    need_rl = True
+                self.platform_control.turn_on(event['nodes'], self.current_time)
+                # if self.rl and self.rl_type == 'continuous':
+                #     need_rl = True
 
             elif etype == 'arrival':
                 record_job_arrival.append(event)
-                self.jobs_manager.add_job_to_waiting_queue(event)
+                self.jobs_manager.add_to_waiting_queue(event)
                 if self.rl and self.rl_type == 'continuous':
                     need_rl = True
 
             elif etype == 'execution_start':
-                if event['job_id'] in self.jobs_manager.active_jobs_id:
+                if any(j['job_id'] == event['job_id'] for j in self.jobs_manager.active_jobs):
                     raise RuntimeError(
                         f"Job {event['job_id']} is already executed"
                     )
 
-                result = self.PlatformControl.compute(
+                result = self.platform_control.compute(
                     event['nodes'], event, self.current_time)
                 if result is not None:
                     event['start_time'] = self.current_time
                     record_job_submission.append(event)
-                    finish_time, ev = result
-                    self.jobs_manager.remove_job_from_waiting_queue(
-                        event['job_id'], type='execution_start')
-                    self.push_event(finish_time, ev)
+                    finish_time, _event = result
+                    self.jobs_manager.add_to_active_jobs(_event)
+                    self.jobs_manager.remove_from_waiting_queue(event)
+                    self.push_event(finish_time, _event)
                 else:
                     raise RuntimeError(
                         f"Job {event['job_id']} failed to execute"
                     )
 
             elif etype == 'execution_finished':
-                terminated = self.PlatformControl.release(
+                terminated = self.platform_control.release(
                     event, self.current_time)
                 self.num_finished_jobs += 1
                 event['terminated'] = terminated
                 event['finish_time'] = self.current_time
+                self.jobs_manager.remove_from_active_jobs(event)
                 record_job_execution.append(event)
                 if self.rl and self.rl_type == 'continuous':
                     need_rl = True
 
             elif etype == 'change_dvfs_mode':
-                _ = self.PlatformControl.change_dvfs_mode(
+                _ = self.platform_control.change_dvfs_mode(
                     event['node'], event['mode'])
 
             elif etype == 'CALL_RL':
                 self.rl_tick_scheduled = False
+                self._schedule_next_rl_tick()
+                
+            elif etype == "oracle":
+                for planned in event["plan"]:
+                    self.push_event(
+                        float(planned["timestamp"]),
+                        planned["event"],
+                    )
+                    
+            while (
+                self.events
+                and self.events[0]["timestamp"] == self.current_time
+            ):
+                same_time_group = self.events.pop(0)
+                events.extend(same_time_group["events"])
 
-        self.Monitor.record(
+            events.sort(
+                key=lambda e: _EVENT_PRIORITY.get(
+                    e["type"],
+                    float("inf"),
+                )
+            )
+
+        self.monitor.record(
             mode='after',
-            machines=self.PlatformControl.machines,
             current_time=self.current_time,
+            machine=self.platform_control.machine,     
             record_job_arrival=record_job_arrival,
             record_job_submission=record_job_submission,
             record_job_execution=record_job_execution,
         )
+        self.monitor.note_processed_events(
+            len(processed_events)
+        )
 
-        # self._schedule_next_rl_tick()
-        
         if self.num_finished_jobs == self.num_jobs:
             message = self.on_finish()
             return message
@@ -291,7 +390,10 @@ class Simulator:
         if need_rl:
             self.push_event(self.current_time, {'type': 'CALL_RL'})
 
-        message = {'timestamp': self.current_time, 'events': events}
+        message = {
+            "timestamp": self.current_time,
+            "events": processed_events,
+        }
         return {'now': self.current_time, 'event_list': [message]}
 
     def advance(self):
@@ -313,6 +415,10 @@ class Simulator:
 
 def run_simulation(simulator, output_folder, top_n=None):
     os.makedirs(output_folder, exist_ok=True)
+    simulator.monitor.configure_state_hist_spill(
+        output_folder=output_folder,
+        flush_every=1000,
+    )
 
     # Wall-clock runtime for the whole simulation
     t0 = time.time()
@@ -323,6 +429,11 @@ def run_simulation(simulator, output_folder, top_n=None):
     simulator.start_simulator()
     while simulator.is_running:
         simulator.advance()
+        simulator.monitor.flush_state_hist_if_safe()
+        
+    simulator.monitor.flush_state_hist_if_safe(
+        force=True,
+    )
 
     prof.disable()
 
@@ -331,7 +442,7 @@ def run_simulation(simulator, output_folder, top_n=None):
 
     log_output(simulator, output_folder)
 
-    # Save runtime_seconds.txt (same as before)
+    # Save runtime_seconds.txt
     runtime_path = os.path.join(output_folder, "runtime_seconds.txt")
     with open(runtime_path, "w") as f:
         f.write(f"{runtime_s}\n")
@@ -346,7 +457,7 @@ def run_simulation(simulator, output_folder, top_n=None):
 
         items = list(stats.stats.items())
         if top_n is not None:
-            items = items[:top_n]  # already sorted by cumulative time
+            items = items[:top_n]
 
         for func, (cc, nc, tt, ct, callers) in items:
             filename, line, fn = func

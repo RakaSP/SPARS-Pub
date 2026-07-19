@@ -1,17 +1,31 @@
 import heapq
-# fcfs_psas.py
+# fcfs_baseline_psas.py
+"""FCFS baseline using the PSAS machine and energy model.
+
+Unlike FCFSPSAS, this baseline only starts jobs that can run immediately.
+It does not create a future schedule, wake sleeping nodes, or apply timeout-
+based power-state decisions.
+"""
+
 import math
 import re
+
 from .base_psas import BasePSAS
+
 
 _COMPUTE_RE = re.compile(r"^compute\(job=\d+\)$")
 EPS = 1e-9
 
 
-class FCFSPSAS(BasePSAS):
-    def __init__(self, machines, jobs_manager, start_time, timeout):
-        super().__init__(machines, jobs_manager, start_time, timeout)
-        self.selected_list = []
+class FCFSBaselinePSAS(BasePSAS):
+    """Current-time FCFS scheduler with energy-aware node selection."""
+
+    def __init__(
+        self, machines, jobs_manager, start_time, timeout
+    ):
+        super().__init__(
+            machines, jobs_manager, start_time, timeout=None
+        )
 
     @staticmethod
     def _resolve_dvfs_power(machine, node, power_type):
@@ -20,7 +34,9 @@ class FCFSPSAS(BasePSAS):
         elif power_type == "compute":
             power_key = "power_compute"
         else:
-            raise ValueError("power_type must be either 'idle' or 'compute'")
+            raise ValueError(
+                "power_type must be either 'idle' or 'compute'"
+            )
 
         dvfs_mode = node["dvfs_mode"]
         profile = machine["dvfs_profiles"][dvfs_mode]
@@ -28,7 +44,7 @@ class FCFSPSAS(BasePSAS):
         if power_key in profile:
             return float(profile[power_key])
 
-        # Backward compatibility with old platform files.
+        # Backward compatibility with older platform files.
         if "power" in profile:
             return float(profile["power"])
 
@@ -39,231 +55,54 @@ class FCFSPSAS(BasePSAS):
 
     def schedule(self):
         super().prep_schedule()
-        now = float(self.current_time)
-
-        # 1) current FCFS commit
-        started_now = self._current_fcfs_commit()
-
-        # 2) future FCFS plan
-        remaining = [j for j in self.waiting_queue if j["job_id"] not in started_now]
-        future_plan = self._future_fcfs_plan(remaining, barrier=now)
-
-        self.selected_list = list(future_plan)
-
-        # 3) wake callbacks
-        self._emit_wake_triggers_from_plan(self.selected_list)
-
-        if self.timeout is not None:
-            super().timeout_policy()
-        super().build_callbacks()
+        self._current_fcfs_commit()
         return self.events
 
-    def _select_nodes_energy_aware_prepared(
-        self,
-        required_nodes,
-        candidates,
-        release_times,
-        min_start_time,
-        node_static_data,
-    ):
-        """Select nodes using prevalidated candidates and float releases."""
-        if len(candidates) < required_nodes:
-            return None
-
-        candidate_time = max(
-            float(min_start_time),
-            heapq.nsmallest(
-                required_nodes,
-                (release_times[nid] for nid in candidates),
-            )[-1],
-        )
-
-        eligible = []
-        for node_id in candidates:
-            release_time = release_times[node_id]
-            if release_time > candidate_time:
-                continue
-
-            data = node_static_data[node_id]
-            if data["state_label"] in (
-                "switching_off",
-                "sleeping",
-            ):
-                cost = data["base"]
-            else:
-                cost = (
-                    data["base"]
-                    + data["idle"]
-                    * (candidate_time - release_time)
-                )
-
-            eligible.append((
-                float(cost),
-                data["state_priority"],
-                data["timeout_priority"],
-                node_id,
-            ))
-
-        if len(eligible) < required_nodes:
-            return None
-
-        selected_nodes = [
-            item[3]
-            for item in heapq.nsmallest(
-                required_nodes,
-                eligible,
-            )
-        ]
-        return selected_nodes, float(candidate_time)
-
     def _current_fcfs_commit(self):
+        """Start the longest FCFS prefix that fits on idle nodes now."""
         now = float(self.current_time)
         started_now = set()
-        idle_candidates = list(self.idle)
         node_selection_static = self._build_node_selection_static_data(
-            idle_candidates,
+            list(self.idle),
             self.next_releases,
         )
-        release_times = {
-            nid: float(self.next_releases[nid]["release_time"])
-            for nid in idle_candidates
-            if nid in node_selection_static
-        }
-        idle_candidates = [
-            nid for nid in idle_candidates if nid in release_times
-        ]
 
-        for job in self.waiting_queue:
-            req = int(job["res"])
-            if req <= 0:
+        for job in self.waiting_queue[:]:
+            required_nodes = int(job["res"])
+
+            if required_nodes <= 0:
                 continue
 
-            # FCFS: if head cannot start now, stop.
-            if len(idle_candidates) < req:
+            # Strict FCFS: once the first waiting job cannot start, no later
+            # job may pass it.
+            if len(self.idle) < required_nodes:
                 break
 
-            res = self._select_nodes_energy_aware_prepared(
-                required_nodes=req,
-                candidates=idle_candidates,
-                release_times=release_times,
+            result = self._select_nodes_energy_aware(
+                required_nodes=required_nodes,
+                _candidates=list(self.idle),
                 min_start_time=now,
                 node_static_data=node_selection_static,
             )
-            if res is None:
+
+            if result is None:
                 break
 
-            nodes, st = res
-            if float(st) > now + EPS:
+            nodes, start_time = result
+
+            if float(start_time) > now + EPS:
                 break
 
             super().allocate(job, nodes)
             started_now.add(job["job_id"])
 
-            selected_set = set(nodes)
-            idle_candidates = [
-                nid
-                for nid in idle_candidates
-                if nid not in selected_set
-            ]
-
         return started_now
 
-    def _future_fcfs_plan(self, jobs, barrier):
-        candidates = (
-            list(self.idle)
-            + list(self.sleeping)
-            + list(self.computing)
-            + list(self.switching_on)
-            + list(self.switching_off)
-        )
-
-        node_selection_static = self._build_node_selection_static_data(
-            candidates,
-            self.next_releases,
-        )
-        release_times = {
-            nid: float(self.next_releases[nid]["release_time"])
-            for nid in candidates
-            if nid in node_selection_static
-        }
-        candidates = [
-            nid for nid in candidates if nid in release_times
-        ]
-
-        plan = []
-        barrier = float(barrier)
-        state = self.state
-
-        for job in jobs:
-            req = int(job["res"])
-            if req <= 0:
-                continue
-
-            res = self._select_nodes_energy_aware_prepared(
-                required_nodes=req,
-                candidates=candidates,
-                release_times=release_times,
-                min_start_time=barrier,
-                node_static_data=node_selection_static,
-            )
-            if res is None:
-                break
-
-            nodes, st = res
-            st = float(st)
-            compute_speed = min(
-                float(state[nid]["compute_speed"])
-                for nid in nodes
-            )
-            ft = st + (float(job["reqtime"]) / compute_speed)
-            plan.append((job, nodes, st, float(ft)))
-
-            barrier = st
-
-        return plan
-
-    def _emit_wake_triggers_from_plan(self, plan):
-        now = float(self.current_time)
-
-        sleeping_set = set(self.sleeping)
-        wake_lead_by_node = {}
-        earliest_wake = {}
-        for job, nodes, st, ft in plan:
-            st = float(st)
-            if st <= now + EPS:
-                continue
-            for nid in nodes:
-                if nid not in sleeping_set:
-                    continue
-                lead = wake_lead_by_node.get(nid)
-                if lead is None:
-                    lead = float(super()._wake_lead_time(nid))
-                    wake_lead_by_node[nid] = lead
-                wake_time = st - lead
-                prev = earliest_wake.get(nid)
-                if prev is None or wake_time < prev:
-                    earliest_wake[nid] = wake_time
-
-        if not earliest_wake:
-            return
-
-        immediate = [nid for nid, t in earliest_wake.items() if t <= now + EPS]
-        future_times = sorted({t for nid, t in earliest_wake.items() if t > now + EPS})
-
-        if immediate:
-            self.push_event(now, {"type": "switch_on", "nodes": immediate})
-            imm_set = set(immediate)
-            self.sleeping = [n for n in self.sleeping if n not in imm_set]
-            self.switching_on.extend([nid for nid in immediate if nid in self.state])
-
-        for t in future_times:
-            self.push_event(float(t), {"type": "call_me_later_so"})
-
     def _remaining_idle_timeout(self, node_id):
-        if self.timeout is None:
-            return math.inf
-        t = self.timeout_list.get(node_id)
-        return float(t - self.current_time) if t is not None else math.inf
+        # timeout is intentionally disabled for the baseline.  Keeping this
+        # helper makes the energy-aware ranking equivalent to the PSAS
+        # implementations without introducing timeout behavior.
+        return math.inf
 
     def _build_node_selection_static_data(
         self,

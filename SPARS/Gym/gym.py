@@ -22,91 +22,133 @@ class HPCGymEnv(gym.Env):
     """
     metadata = {"render.modes": ["human"]}
 
-    def __init__(self, simulator, device=CPU_DEVICE):
+    def __init__(self, simulator, training, device=CPU_DEVICE):
         super().__init__()
 
         self.simulator = simulator
         self.device = device
+        self.training=training
 
-    def step(self, actions):
-        log_trace('============= CALL RL ================')
-        state = self.simulator.PlatformControl.get_state()
-        log_info(f"Current Time: {self.simulator.current_time}")
+    def step(self, obs, logits):
+        log_trace("============= CALL RL ================")
+        log_trace(
+            f"Current Time: {self.simulator.current_time}"
+        )
 
-        s = repr(actions.detach().cpu()).replace("\n", " ")
-        log_info(f"Action taken: {s}")
-        
-        
+        pre_action_simulator = copy.deepcopy(
+            self.simulator
+        )
 
-        """"Action translator for Scalar Active Target"""
-        rl_events = action_translator(
-            self.simulator.Monitor.num_nodes, state, actions, self.simulator.current_time)
+        # 1. Translate the selected action into simulator events.
+        rl_events, actions, logprob = action_translator(
+            logits,
+            self.simulator,
+        )
 
-
-        monitor = {
-            'energy': copy.deepcopy(self.simulator.Monitor.energy),
-            'ecr': copy.deepcopy(self.simulator.Monitor.ecr),
-            'nodes_state': copy.deepcopy(self.simulator.Monitor.nodes_state),
-        }
-
-
-        for _rl_event in rl_events:
+        # 2. Add the RL events to the simulator.
+        for rl_event in rl_events:
             self.simulator.push_event(
-                timestamp=_rl_event['time'], event=_rl_event['event'])
+                timestamp=rl_event["time"],
+                event=rl_event["event"],
+            )
 
+        # 3. Process the RL switching events.
+        # If the action does not cause any switching,
+        # there is nothing to process here.
+        if rl_events:
+            self.simulator.proceed()
+
+        # 4. Run the scheduler after applying the RL action.
+        scheduler_message = (
+            self.simulator.scheduler.schedule(
+                self.simulator.current_time
+            )
+        )
+
+        # 5. Add the scheduler-generated events.
+        for data in scheduler_message:
+            timestamp = data["timestamp"]
+            events = data["events"]
+
+            for event in events:
+                self.simulator.push_event(
+                    timestamp,
+                    event,
+                )
+
+        # 6. Continue the simulation until the next CALL_RL.
         need_rl = False
 
-        prev_current_time = self.simulator.current_time
-        skipped = False
-        
-        while not need_rl and self.simulator.is_running:
-            if rl_events or skipped:
-                events = self.simulator.proceed()
+        while (
+            not need_rl
+            and self.simulator.is_running
+        ):
+            proceeded_events = self.simulator.proceed()
 
-                for event_list in events['event_list']:
-                    for event in event_list['events']:
-                        if event['type'] == 'CALL_RL':
-                            need_rl = True
-                            break
-                    if need_rl:
+            for event_list in proceeded_events["event_list"]:
+                for event in event_list["events"]:
+                    if event["type"] == "CALL_RL":
+                        need_rl = True
                         break
+
                 if need_rl:
                     break
 
-            if not rl_events and not skipped:
-                skipped = True
+            # CALL_RL was found, so skip the scheduler
+            # and leave this loop.
+            
+            # 7. If no RL call then call scheduler, if there's then break out and call RL immediately
+            if need_rl:
+                break
 
-            scheduler_message = self.simulator.scheduler.schedule(
-                self.simulator.current_time)
+            scheduler_message = (
+                self.simulator.scheduler.schedule(
+                    self.simulator.current_time
+                )
+            )
 
-            for _data in scheduler_message:
-                timestamp = _data['timestamp']
-                _events = _data['events']
-                for event in _events:
-                    self.simulator.push_event(timestamp, event)
+            for data in scheduler_message:
+                timestamp = data["timestamp"]
+                events = data["events"]
 
-        next_current_time = self.simulator.current_time
+                for event in events:
+                    self.simulator.push_event(
+                        timestamp,
+                        event,
+                    )
+
+        # 7. Obtain the state at the next RL decision point.
+        next_obs = self.get_observation()
+
+        # 8. Calculate the reward over the transition.
         reward_function = Reward()
-        future_monitor = self.simulator.Monitor
 
-        """SPARS Calculate Reward"""
         reward = reward_function.calculate_reward(
-            self.simulator.Monitor, future_monitor, self.simulator.current_time, next_current_time)
-
-
+            obs,
+            next_obs,
+            pre_action_simulator,
+            self.simulator,
+            actions,
+        )
 
         done = not self.simulator.is_running
-        observation = self.get_observation()
+        
+        self.simulator.monitor.flush_state_hist_if_safe(
+            force=done,
+        )
+        
+        ppo_info = {
+            "reward": reward,
+            "actions": actions,
+            "logprob": logprob,
+        }
 
+        return next_obs, ppo_info, done
 
-        return observation, reward, done
 
     def reset(self, simulator):
         self.simulator = simulator
 
     def get_observation(self):
-        features = feature_extraction(self.simulator)
-        features_ = T.from_numpy(features).to(self.device).float()
-        observation = (features_)
-
-        return observation
+        obs = feature_extraction(simulator=self.simulator,training=self.training)
+        return obs

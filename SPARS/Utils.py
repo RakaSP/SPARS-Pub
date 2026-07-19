@@ -15,17 +15,14 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 
 def _to_int_series(s):
-    # handle lists, strings like "3", floats like 3.0, and None
-    return pd.to_numeric(s, errors="coerce").astype("Int64")  # nullable int
+    return pd.to_numeric(s, errors="coerce").astype("Int64")
 
 
 def _to_float_series(s):
-    # unify time columns to float (seconds). If you use datetime, convert both sides to datetime64[ns] instead.
     return pd.to_numeric(s, errors="coerce").astype("float64")
 
 
 def parse_nodes(x):
-    # handle NaN/None/empty strings
     if x is None or (isinstance(x, float) and pd.isna(x)):
         return []
     if isinstance(x, (list, tuple)):
@@ -51,10 +48,8 @@ def process_node_job_data(nodes_data, jobs):
         'sleeping': -4,
     }
 
-    # --- node intervals ---
     node_intervals = []
-    for node in (nodes_data or []):
-        nid = node['id']
+    for nid, node in (nodes_data or {}).items():
         current_dvfs = None
         for itv in node.get('state_history', []):
             if 'dvfs_mode' in itv:
@@ -78,10 +73,8 @@ def process_node_job_data(nodes_data, jobs):
             'dvfs_mode', 'state', 'submission_time', 'start_time', 'finish_time', 'nodes', 'job_id', 'terminated'
         ])
 
-    # --- jobs exploded by node ---
     jobs_exploded = jobs.copy()
 
-    # nodes "1 2 3" -> [1,2,3], then explode
     jobs_exploded['nodes'] = jobs_exploded['nodes'].map(parse_nodes)
     jobs_exploded = jobs_exploded.explode(
         'nodes').rename(columns={'nodes': 'node_id'})
@@ -91,15 +84,12 @@ def process_node_job_data(nodes_data, jobs):
             jobs_exploded[c] = pd.to_numeric(
                 jobs_exploded[c], errors='coerce').astype(float)
 
-    # ensure essential cols exist minimally
     if 'terminated' not in jobs_exploded.columns:
         jobs_exploded['terminated'] = pd.NA
     if 'job_id' not in jobs_exploded.columns:
         jobs_exploded['job_id'] = -1
 
-    # join ACTIVE intervals with jobs on (node_id, start_time, finish_time)
-    active_df = node_intervals_df[node_intervals_df['state'] == 'active'].copy(
-    )
+    active_df = node_intervals_df[node_intervals_df['state'] == 'active'].copy()
     merged = pd.merge(
         active_df,
         jobs_exploded[['node_id', 'start_time', 'finish_time',
@@ -107,13 +97,11 @@ def process_node_job_data(nodes_data, jobs):
         on=['node_id', 'start_time', 'finish_time'],
         how='left'
     )
-    merged['submission_time'] = merged['subtime']  # carry from jobs
+    merged['submission_time'] = merged['subtime']
     merged.drop(columns=['subtime'], inplace=True)
     merged['job_id'] = merged['job_id'].fillna(-1)
 
-    # non-active intervals: fill placeholders
-    non_active_df = node_intervals_df[node_intervals_df['state'] != 'active'].copy(
-    )
+    non_active_df = node_intervals_df[node_intervals_df['state'] != 'active'].copy()
     non_active_df['submission_time'] = pd.NA
     non_active_df['job_id'] = non_active_df['state'].map(
         mapping_non_active).fillna(-1)
@@ -121,7 +109,6 @@ def process_node_job_data(nodes_data, jobs):
 
     combined = pd.concat([merged, non_active_df], ignore_index=True)
 
-    # group nodes that share the same interval tuple
     grouped = combined.groupby(
         ['state', 'dvfs_mode', 'submission_time',
             'start_time', 'finish_time', 'job_id'],
@@ -139,12 +126,6 @@ def process_node_job_data(nodes_data, jobs):
 
 
 def build_waiting_time_df(jobs_execution_log: list) -> pd.DataFrame:
-    """
-    Convert jobs_execution_log (list of dict) into a DataFrame with:
-    job_id, subtime, start_time, finish_time, waiting_time (start_time - subtime).
-
-    Handles both numeric timestamps and datetime-like strings.
-    """
     df = pd.DataFrame(jobs_execution_log)
     required = {'job_id', 'subtime', 'start_time', 'finish_time'}
     missing = required - set(df.columns)
@@ -167,23 +148,18 @@ def build_waiting_time_df(jobs_execution_log: list) -> pd.DataFrame:
 
 
 def write_waiting_time_log(simulator, output_folder: str, filename: str = "waiting_time_log.csv") -> str:
-    """
-    Build waiting-time DataFrame from simulator.Monitor.jobs_execution_log
-    and write it to <output_folder>/<filename>. Returns the file path.
-    """
     os.makedirs(output_folder, exist_ok=True)
-    wt_df = build_waiting_time_df(simulator.Monitor.jobs_execution_log)
+    wt_df = build_waiting_time_df(simulator.monitor.jobs_execution_log)
     path = os.path.join(output_folder, filename)
     wt_df.to_csv(path, index=False)
     return path
 
 
-def build_energy_df(energy_log: list) -> pd.DataFrame:
-    """
-    Convert simulator.Monitor.energy (list[dict]) into a DataFrame with columns:
-    id, energy_consumption, energy_effective, energy_waste.
-    """
-    df = pd.DataFrame(energy_log)
+def build_energy_df(energy_log: Dict[int, Dict]) -> pd.DataFrame:
+    df = pd.DataFrame.from_dict(energy_log, orient='index')
+    df.index.name = 'id'
+    df = df.reset_index()
+
     required = {'id', 'energy_consumption', 'energy_effective', 'energy_waste'}
     missing = required - set(df.columns)
     if missing:
@@ -193,7 +169,6 @@ def build_energy_df(energy_log: list) -> pd.DataFrame:
     out = df.loc[:, ['id', 'energy_consumption',
                      'energy_effective', 'energy_waste']].copy()
 
-    # (Optional) coerce to numeric in case inputs are strings
     for col in ['energy_consumption', 'energy_effective', 'energy_waste']:
         out[col] = pd.to_numeric(out[col], errors='coerce')
 
@@ -201,23 +176,14 @@ def build_energy_df(energy_log: list) -> pd.DataFrame:
 
 
 def write_energy_log(simulator, output_folder: str, filename: str = "energy_log.csv") -> str:
-    """
-    Build energy DataFrame from simulator.Monitor.energy and write it to CSV.
-    Returns the file path.
-    """
     os.makedirs(output_folder, exist_ok=True)
-    energy_df = build_energy_df(simulator.Monitor.energy)
+    energy_df = build_energy_df(simulator.monitor.energy)
     path = os.path.join(output_folder, filename)
     energy_df.to_csv(path, index=False)
     return path
 
 
-def _sum_states_dur(states_dur: list) -> dict:
-    """
-    Sum durations across all nodes and all DVFS modes for each state bucket.
-    Expected keys per node: active_idle, active_compute, switching_off, switching_on, sleeping.
-    Returns a dict with totals for each bucket (float seconds).
-    """
+def _sum_states_dur(states_dur: Dict[int, Dict]) -> dict:
     totals = {
         "total_active_idle": 0.0,
         "total_active_compute": 0.0,
@@ -229,8 +195,7 @@ def _sum_states_dur(states_dur: list) -> dict:
         totals["total_time_all_states"] = 0.0
         return totals
 
-    for entry in states_dur:
-        # each value is a dict of dvfs_mode -> duration
+    for entry in states_dur.values():
         for key, out_key in [
             ("active_idle", "total_active_idle"),
             ("active_compute", "total_active_compute"),
@@ -248,37 +213,21 @@ def _sum_states_dur(states_dur: list) -> dict:
 
 
 def build_metrics_df(jobs_execution_log: list, energy_log: list, states_dur: list | None = None) -> pd.DataFrame:
-    """
-    Return a 1-row DataFrame with:
-      - total_waiting_time
-      - mean_waiting_time
-      - total_energy_waste
-      - total_energy_consumption
-      - energy_effective (= total_energy_consumption - total_energy_waste)
-      - totals of node state durations aggregated over all nodes & dvfs:
-        total_active_idle, total_active_compute, total_switching_off, total_switching_on,
-        total_sleeping, total_time_all_states
 
-    waiting_time is computed as start_time - subtime (seconds if datetimes).
-    """
-    # reuse existing builders
     wt_df = build_waiting_time_df(
         jobs_execution_log) if jobs_execution_log else pd.DataFrame(columns=["waiting_time"])
     en_df = build_energy_df(energy_log) if energy_log else pd.DataFrame(
         columns=["energy_waste"])
 
-    # Waiting-time aggregates
     wt_series = pd.to_numeric(
         wt_df.get("waiting_time", pd.Series(dtype=float)), errors="coerce")
     total_waiting = wt_series.sum(min_count=1)
     mean_waiting = wt_series.mean() if not wt_series.empty else float("nan")
 
-    # Energy aggregates
     waste_series = pd.to_numeric(
         en_df.get("energy_waste", pd.Series(dtype=float)), errors="coerce")
     total_waste = waste_series.sum(min_count=1)
 
-    # Try several common column names for total consumption
     cons_col_candidates = ["energy_consumption",
                            "energy_total", "consumed_energy", "energy"]
     cons_series = None
@@ -295,7 +244,6 @@ def build_metrics_df(jobs_execution_log: list, energy_log: list, states_dur: lis
         total_consumption = float("nan")
         energy_effective = float("nan")
 
-    # NaN-safe defaults to 0.0 for totals; keep mean as NaN if unavailable
     if pd.isna(total_waiting):
         total_waiting = 0.0
     if pd.isna(total_waste):
@@ -319,14 +267,11 @@ def build_metrics_df(jobs_execution_log: list, energy_log: list, states_dur: lis
 
 
 def write_metrics_log(simulator, output_folder: str, filename: str = "metrics.csv") -> str:
-    """
-    Build metrics DataFrame and write it to <output_folder>/<filename>.
-    """
     os.makedirs(output_folder, exist_ok=True)
     metrics_df = build_metrics_df(
-        simulator.Monitor.jobs_execution_log,
-        simulator.Monitor.energy,
-        simulator.Monitor.states_dur,
+        simulator.monitor.jobs_execution_log,
+        simulator.monitor.energy,
+        simulator.monitor.states_dur,
     )
     path = os.path.join(output_folder, filename)
     metrics_df.to_csv(path, index=False)
@@ -334,13 +279,7 @@ def write_metrics_log(simulator, output_folder: str, filename: str = "metrics.cs
 
 
 def write_state_switch_csv(simulator, output_folder: str, filename: str = "state_switch.csv") -> str:
-    """
-    Save `state_switch` (list of dicts) to CSV with ordered columns:
-    time, nb_sleeping, nb_switching_on, nb_switching_off, nb_idle, nb_computing.
-
-    Returns the written filepath.
-    """
-    state_switch = simulator.Monitor.state_switch
+    state_switch = simulator.monitor.state_switch
 
     os.makedirs(output_folder, exist_ok=True)
 
@@ -348,15 +287,12 @@ def write_state_switch_csv(simulator, output_folder: str, filename: str = "state
             "nb_switching_off", "nb_idle", "nb_computing"]
     df = pd.DataFrame(state_switch)
 
-    # ensure all expected columns exist (missing -> NaN)
     for c in cols:
         if c not in df.columns:
             df[c] = pd.NA
 
-    # order columns
     df = df[cols]
 
-    # optional: coerce numeric columns (except 'time' if it's datetime-like strings)
     for c in cols:
         if c != "time":
             df[c] = pd.to_numeric(df[c], errors="coerce")
@@ -368,23 +304,48 @@ def write_state_switch_csv(simulator, output_folder: str, filename: str = "state
 def log_output(simulator, output_folder):
     os.makedirs(f'{output_folder}', exist_ok=True)
 
-    raw_node_log = pd.DataFrame(simulator.Monitor.states_hist)
-    raw_node_log.to_csv(f'{output_folder}/raw_node_log.csv', index=False)
+    # raw_node_log = pd.DataFrame([
+    #     {'id': node_id, 'state_history': state_hist['state_history']}
+    #     for node_id, state_hist in simulator.monitor.states_hist.items()
+    # ])
+    # raw_node_log.to_csv(f'{output_folder}/raw_node_log.csv', index=False)
 
-    raw_job_log = pd.DataFrame(simulator.Monitor.jobs_execution_log)
+    raw_job_log = pd.DataFrame(simulator.monitor.jobs_execution_log)
     raw_job_log.to_csv(f'{output_folder}/raw_job_log.csv', index=False)
+    
+    unfinished_log = pd.DataFrame(simulator.jobs_manager.waiting_queue)
+    unfinished_log.to_csv(f'{output_folder}/unfinished_jobs_log.csv', index=False)
 
-    raw_terminated_log = pd.DataFrame(simulator.jobs_manager.terminated_jobs)
-    raw_terminated_log.to_csv(f'{output_folder}/raw_terminated_log.csv', index=False)
+    # raw_terminated_log = pd.DataFrame(simulator.jobs_manager.terminated_jobs)
+    # raw_terminated_log.to_csv(f'{output_folder}/raw_terminated_log.csv', index=False)
     
     write_waiting_time_log(simulator, output_folder)
     write_energy_log(simulator, output_folder)
     write_metrics_log(simulator, output_folder)
     write_state_switch_csv(simulator, output_folder)
 
+    # Pemanggilan ini juga mengamankan jalur non-RL atau pemangilan manual.
+    simulator.monitor.flush_state_hist_if_safe(
+        force=True,
+    )
+
+    complete_states_hist = (
+        simulator.monitor.build_complete_states_hist()
+    )
+
     node_log = process_node_job_data(
-        simulator.Monitor.states_hist, raw_job_log)
-    node_log.to_csv(f'{output_folder}/node_log.csv', index=False)
+        complete_states_hist,
+        raw_job_log,
+    )
+
+    node_log.to_csv(
+        f"{output_folder}/node_log.csv",
+        index=False,
+    )
+
+    # Bebaskan hasil rehydration sesegera mungkin.
+    del complete_states_hist
+    del node_log
 
 def _load_config(path: str) -> Dict[str, Any]:
     """
@@ -425,12 +386,11 @@ def log_config_summary(cfg: Dict[str, Any]) -> None:
 
     if rl_cfg.get("enabled"):
         log_info(
-            "RL: ENABLED (type=%s, dt=%s, device=%s, epochs=%s, num_nodes=%s)",
+            "RL: ENABLED (type=%s, dt=%s, device=%s, epochs=%s)",
             rl_cfg.get("type"),
             rl_cfg.get("dt"),
             rl_cfg.get("device"),
             rl_cfg.get("epochs"),
-            rl_cfg.get("num_nodes"),
         )
         log_info(
             "RL: agent=%s, checkpoint=%s",
@@ -494,40 +454,23 @@ def _load_object(spec: str):
     return getattr(importlib.import_module(mod), name)
 
 
-def _instantiate_with_flexible_kwargs(cls, params: dict, *, positional_first: str | None = None):
-    """
-    Instantiate `cls` with kwargs in `params`. If the constructor needs a first positional
-    argument (e.g., optimizer 'params'), set positional_first='params'.
-    Filters unknown kwargs automatically when possible.
-    """
-    import inspect
-    params = dict(params or {})
+def _instantiate_with_flexible_kwargs(
+    cls,
+    params: dict,
+    *,
+    positional_first: str | None = None,
+):
+    params = dict(params)
 
-    def _call(p: dict):
-        if positional_first and positional_first in p:
-            pf = p.pop(positional_first)
-            try:
-                return cls(pf, **p)
-            finally:
-                p[positional_first] = pf
-        return cls(**p)
+    if positional_first and positional_first in params:
+        positional_value = params.pop(positional_first)
 
-    try:
-        return _call(params)
-    except TypeError:
-        # Filter unknown kwargs unless ctor accepts **kwargs
-        sig = None
-        try:
-            sig = inspect.signature(cls.__init__)
-            has_varkw = any(
-                a.kind == inspect.Parameter.VAR_KEYWORD for a in sig.parameters.values())
-            if has_varkw:
-                raise
-            allowed = {k for k in sig.parameters if k != "self"}
-            filtered = {k: v for k, v in params.items() if k in allowed}
-            return _call(filtered)
-        except Exception:
-            raise
+        return cls(
+            positional_value,
+            **params,
+        )
+
+    return cls(**params)
 
 
 def _build_agent(rl_cfg: dict, device: str):
@@ -574,13 +517,3 @@ def _build_agent(rl_cfg: dict, device: str):
     return model, optimizer
 # ---------------------------
 
-
-def get_action(model, obs):
-    logits, V = model(obs)
-    # print(logits)
-    dist = T.distributions.Normal(logits, 0.02)
-    # dist = T.distributions.Categorical(logits)
-    action = dist.sample()
-    log_prob = dist.log_prob(action)
-
-    return action, log_prob
