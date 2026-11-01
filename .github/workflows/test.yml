@@ -1,0 +1,46 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {os: ubuntu-latest, python: "3.10", torch: true}
+          - {os: ubuntu-latest, python: "3.12", torch: true}
+          - {os: windows-latest, python: "3.12", torch: true}
+          - {os: macos-latest, python: "3.12", torch: true}
+          # The README and installer default to no torch: verify that install and test too.
+          - {os: ubuntu-latest, python: "3.12", torch: false}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install PyTorch (CPU)
+        if: matrix.torch
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "macOS" ]; then pip install torch; else pip install torch --index-url https://download.pytorch.org/whl/cpu; fi
+      - name: Install SPARS
+        run: pip install -e ".[dev]"
+      - name: Tests
+        run: python -m pytest tests -q
+      - name: The spars command starts
+        shell: bash
+        run: |
+          spars --help
+          code=0; spars < /dev/null || code=$?
+          test "$code" -eq 2   # no terminal: it explains instead of running every set

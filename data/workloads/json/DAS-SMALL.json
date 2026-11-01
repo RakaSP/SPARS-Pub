@@ -1,0 +1,15 @@
+
+{
+    "nb_res": 64,
+    "jobs": [
+        {
+            "job_id": 1,
+            "res": 8,
+            "subtime": 0,
+            "reqtime": 7200,
+            "runtime": 1924,
+            "profile": "100",
+            "user_id": 1
+        }
+    ]
+}

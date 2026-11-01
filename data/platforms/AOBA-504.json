@@ -1,0 +1,92 @@
+{
+    "machines": [
+        {
+            "node_name": "AOBA-A",
+            "id": [
+                "0-503"
+            ],
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power_compute": 1050.0,
+                    "power_idle": 300.0,
+                    "compute_speed": 0.5
+                },
+                "underclock_1": {
+                    "power_compute": 1575.0,
+                    "power_idle": 450.0,
+                    "compute_speed": 0.75
+                },
+                "base": {
+                    "power_compute": 2100.0,
+                    "power_idle": 600.0,
+                    "compute_speed": 1.0
+                },
+                "overclock_1": {
+                    "power_compute": 2625.0,
+                    "power_idle": 750.0,
+                    "compute_speed": 1.25
+                },
+                "overclock_2": {
+                    "power_compute": 3150.0,
+                    "power_idle": 900.0,
+                    "compute_speed": 1.4
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0.0,
+                            "std": 0.0,
+                            "min": 0.0,
+                            "max": 0.0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 600.0,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 600.0,
+                            "std": 60.0
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 600.0,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 1200.0,
+                            "std": 60.0
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 60.0,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0.0,
+                            "std": 0.0,
+                            "min": 0.0,
+                            "max": 0.0
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

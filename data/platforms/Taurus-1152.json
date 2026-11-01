@@ -1,0 +1,92 @@
+{
+    "machines": [
+        {
+            "node_name": "Taurus",
+            "id": [
+                "0-1151"
+            ],
+            "dvfs_profiles": {
+                "underclock_2": {
+                    "power_compute": 83.5,
+                    "power_idle": 45.5,
+                    "compute_speed": 0.5
+                },
+                "underclock_1": {
+                    "power_compute": 125.25,
+                    "power_idle": 68.25,
+                    "compute_speed": 0.75
+                },
+                "base": {
+                    "power_compute": 167.0,
+                    "power_idle": 91.0,
+                    "compute_speed": 1.0
+                },
+                "overclock_1": {
+                    "power_compute": 208.75,
+                    "power_idle": 113.75,
+                    "compute_speed": 1.25
+                },
+                "overclock_2": {
+                    "power_compute": 250.5,
+                    "power_idle": 136.5,
+                    "compute_speed": 1.4
+                }
+            },
+            "dvfs_mode": "base",
+            "states": {
+                "active": {
+                    "power": "from_dvfs",
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": true,
+                    "transitions": [
+                        {
+                            "state": "switching_off",
+                            "transition_time": 0.0,
+                            "std": 0.0,
+                            "min": 0.0,
+                            "max": 0.0
+                        }
+                    ]
+                },
+                "switching_off": {
+                    "power": 110.0,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "sleeping",
+                            "transition_time": 15.0,
+                            "std": 1.5
+                        }
+                    ]
+                },
+                "switching_on": {
+                    "power": 130.0,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "active",
+                            "transition_time": 182.0,
+                            "std": 18.2
+                        }
+                    ]
+                },
+                "sleeping": {
+                    "power": 8.0,
+                    "compute_speed": "from_dvfs",
+                    "can_run_jobs": false,
+                    "transitions": [
+                        {
+                            "state": "switching_on",
+                            "transition_time": 0.0,
+                            "std": 0.0,
+                            "min": 0.0,
+                            "max": 0.0
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
